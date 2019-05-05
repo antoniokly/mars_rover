@@ -45,6 +45,10 @@ enum Action: String {
 }
 
 extension Array where Element == Action {
+    var command: String {
+        return self.map({$0.command}).joined()
+    }
+
     func transform(_ position: Position) -> Position {
         var newPosition = position
         

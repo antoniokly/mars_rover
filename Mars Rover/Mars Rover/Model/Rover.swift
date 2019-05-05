@@ -24,7 +24,7 @@ class Rover {
     
     var commandString: String {
         get {
-            return actions.map({$0.command}).joined()
+            return actions.command
         }
         set {
             var newActions: [Action] = []
