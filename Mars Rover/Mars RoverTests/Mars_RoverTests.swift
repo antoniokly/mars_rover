@@ -82,4 +82,48 @@ class Mars_RoverTests: XCTestCase {
         rover.actions.append(.spinRight)
         XCTAssertEqual(rover.finalPosition.string, "1 1 E")
     }
+    
+    func testCommandString() {
+        let rover = Rover(name: "Rover 1",
+                          position: Position(coordinate: Coordinate(x: 1, y: 1), heading: .E))
+        
+        rover.actions = [
+            .moveForward,
+            .spinLeft,
+            .spinRight,
+            .moveForward,
+            .spinRight,
+            .spinLeft,
+            .spinLeft,
+            .spinLeft,
+            .spinLeft,
+            .moveForward,
+            .moveForward
+        ]
+        
+        XCTAssertEqual(rover.commandString, "MLRMRLLLLMM")
+    }
+    
+    func testSetCommandString() {
+        let rover = Rover(name: "Rover 1",
+                          position: Position(coordinate: Coordinate(x: 1, y: 1), heading: .E))
+        
+        rover.commandString = "MLRMRLLLLZZZMM"
+        
+        let expected: [Action] = [
+            .moveForward,
+            .spinLeft,
+            .spinRight,
+            .moveForward,
+            .spinRight,
+            .spinLeft,
+            .spinLeft,
+            .spinLeft,
+            .spinLeft,
+            .moveForward,
+            .moveForward
+        ]
+        
+        XCTAssertEqual(rover.actions, expected)
+    }
 }

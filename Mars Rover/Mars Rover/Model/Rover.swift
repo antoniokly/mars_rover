@@ -26,4 +26,21 @@ class Rover {
         
         return newPosition
     }
+    
+    var commandString: String {
+        get {
+            return actions.map({$0.command}).joined()
+        }
+        set {
+            var newActions: [Action] = []
+            
+            for char in newValue {
+                if let action = Action(command: "\(char)") {
+                    newActions.append(action)
+                }
+            }
+            
+            self.actions = newActions
+        }
+    }
 }
