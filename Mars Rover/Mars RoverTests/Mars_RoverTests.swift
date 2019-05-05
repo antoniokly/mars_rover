@@ -128,11 +128,11 @@ class Mars_RoverTests: XCTestCase {
     }
     
     func testInvalidCommandString() {
-        let commandString = "MLRMRLXXXLZZZMM"
+        let rover1 = Rover(name: "Rover 1", position: Position(coordinate: Coordinate(x: 1, y: 2), heading: .N))
+        rover1.commandString = "MLRMRLXXXLZZZMM"
         
-        let actions = [Action](commandString: commandString)
-        
-        XCTAssertNil(actions)
+        XCTAssertTrue(rover1.actions.isEmpty)
+        XCTAssertEqual(rover1.commandString, "")
     }
     
     func testOutOfBoundX() {
