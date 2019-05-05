@@ -25,8 +25,8 @@ enum Action: String {
         case .moveForward:
             return Position(
                 coordinate: Coordinate(
-                    x: position.coordinate.x + cos(position.heading.angle),
-                    y: position.coordinate.y + sin(position.heading.angle)
+                    x: position.coordinate.x + Int(cos(position.heading.angle)),
+                    y: position.coordinate.y + Int(sin(position.heading.angle))
                 ),
                 heading: position.heading
             )

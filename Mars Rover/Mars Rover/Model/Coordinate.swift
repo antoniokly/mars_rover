@@ -8,10 +8,10 @@
 import Foundation
 
 struct Coordinate {
-    static var format: String = "%.0f"
+    static var format: String = "%d"
 
-    var x: Double
-    var y: Double
+    var x: Int
+    var y: Int
     
     var string: String {
         return String(format: "\(Coordinate.format) \(Coordinate.format)", x, y)

@@ -38,7 +38,8 @@ class Rover {
                 for i in 0 ..< newActions.count {
                     let action = newActions[i]
                     newPosition = newActions[i].transform(newPosition)
-                    if newPosition.coordinate.x > limit.x || newPosition.coordinate.y > limit.y {
+                    
+                    if newPosition.coordinate.x > limit.x || newPosition.coordinate.y > limit.y || newPosition.coordinate.x < 0 || newPosition.coordinate.y < 0 {
                         NSLog("Out of bound (%@) after step %d (%@). Warning: Command is truncated.", newPosition.string, i, action.command)
                         
                         newActions = Array(newActions.prefix(upTo: i))

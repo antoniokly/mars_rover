@@ -135,13 +135,45 @@ class Mars_RoverTests: XCTestCase {
         XCTAssertNil(actions)
     }
     
-    func testOutOfBound() {
+    func testOutOfBoundX() {
         let rover1 = Rover(name: "Rover 1", position: Position(coordinate: Coordinate(x: 1, y: 2), heading: .N))
         rover1.bound = Coordinate(x: 5, y: 5)
         rover1.commandString = "RMMMMMMMMLLMMMMM"
         
         XCTAssertEqual(rover1.commandString, "RMMMM")
         XCTAssertEqual(rover1.finalPosition.string, "5 2 E")
+    }
+    
+    func testOutOfBoundY() {
+        let rover1 = Rover(name: "Rover 1", position: Position(coordinate: Coordinate(x: 1, y: 2), heading: .N))
+        rover1.bound = Coordinate(x: 5, y: 5)
+        rover1.commandString = "MMMMMMMMLLMMMMMMMMM"
+        
+        XCTAssertEqual(rover1.commandString, "MMM")
+        XCTAssertEqual(rover1.finalPosition.string, "1 5 N")
+    }
+    
+    func testNoBound() {
+        let rover1 = Rover(name: "Rover 1", position: Position(coordinate: Coordinate(x: 1, y: 2), heading: .N))
+        rover1.commandString = "MMMMMMMMLLMMMMMMMMMMMRMMM"
+        
+        XCTAssertEqual(rover1.commandString, "MMMMMMMMLLMMMMMMMMMMMRMMM")
+        XCTAssertEqual(rover1.finalPosition.string, "-2 -1 W")
+    }
+    
+    func testOutOfBoundNegative() {
+        let rover1 = Rover(name: "Rover 1", position: Position(coordinate: Coordinate(x: 1, y: 2), heading: .N))
+        let rover2 = Rover(name: "Rover 2", position: Position(coordinate: Coordinate(x: 3, y: 3), heading: .E))
+        let _ = Site(name: "A Plateau", grid: Coordinate(x: 5, y: 5), rovers: [rover1, rover2])
+        
+        rover1.commandString = "LMMMLLMMM"
+        rover2.commandString = "RMMMMMMRRMMMMM"
+        
+        XCTAssertEqual(rover1.commandString, "LM")
+        XCTAssertEqual(rover1.finalPosition.string, "0 2 W")
+        
+        XCTAssertEqual(rover2.commandString, "RMMM")
+        XCTAssertEqual(rover2.finalPosition.string, "3 0 S")
     }
     
     func testExample() {
