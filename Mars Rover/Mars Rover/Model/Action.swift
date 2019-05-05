@@ -7,31 +7,39 @@
 
 import Foundation
 
-struct Action {
-    var command: String
-    var transform: (Position) -> Position
+enum Action: String {
+    case moveForward = "M"
+    case spinLeft = "L"
+    case spinRight = "R"
     
-    static let moveForward = Action(command: "M") { (position) -> Position in
-        return Position(
-            coordinate: Coordinate(
-                x: position.coordinate.x + cos(position.heading.angle),
-                y: position.coordinate.y + sin(position.heading.angle)
-            ),
-            heading: position.heading
-        )
+    var command: String {
+        return self.rawValue
     }
     
-    static let spinLeft = Action(command: "L") { (position) -> Position in
-        return Position(
-            coordinate: position.coordinate,
-            heading: position.heading.left
-        )
+    init?(command: String) {
+        self.init(rawValue: command)
     }
     
-    static let spinRight = Action(command: "R") { (position) -> Position in
-        return Position(
-            coordinate: position.coordinate,
-            heading: position.heading.right
-        )
+    func transform(_ position: Position) -> Position {
+        switch self {
+        case .moveForward:
+            return Position(
+                coordinate: Coordinate(
+                    x: position.coordinate.x + cos(position.heading.angle),
+                    y: position.coordinate.y + sin(position.heading.angle)
+                ),
+                heading: position.heading
+            )
+        case .spinLeft:
+            return Position(
+                coordinate: position.coordinate,
+                heading: position.heading.left
+            )
+        case .spinRight:
+            return Position(
+                coordinate: position.coordinate,
+                heading: position.heading.right
+            )
+        }
     }
 }
