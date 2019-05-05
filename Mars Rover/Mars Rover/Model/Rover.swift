@@ -11,6 +11,7 @@ class Rover {
     private (set) var initialPosition: Position
     var name: String
     var actions: [Action] = []
+    var bound: Coordinate?
     
     init(name: String, position: Position) {
         self.name = name

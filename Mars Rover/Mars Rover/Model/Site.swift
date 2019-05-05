@@ -16,5 +16,9 @@ class Site {
         self.name = name
         self.grid = grid
         self.rovers = rovers
+        
+        for rover in self.rovers {
+            rover.bound = grid
+        }
     }
 }
