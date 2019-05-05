@@ -126,4 +126,43 @@ class Mars_RoverTests: XCTestCase {
         
         XCTAssertEqual(rover.actions, expected)
     }
+    
+    func testExample() {
+        let rover1 = Rover(name: "Rover 1", position: Position(coordinate: Coordinate(x: 1, y: 2), heading: .N))
+        let rover2 = Rover(name: "Rover 2", position: Position(coordinate: Coordinate(x: 3, y: 3), heading: .E))
+        let site = Site(name: "A Plateau", grid: Coordinate(x: 5, y: 5), rovers: [rover1, rover2])
+        
+        rover1.commandString = "LMLMLMLMM"
+        rover2.commandString = "MMRMMRMRRM"
+    
+        //assert input
+        XCTAssertEqual(site.grid.string, "5 5")
+        XCTAssertEqual(rover1.initialPosition.string, "1 2 N")
+        XCTAssertEqual(rover1.actions, [.spinLeft,
+                                        .moveForward,
+                                        .spinLeft,
+                                        .moveForward,
+                                        .spinLeft,
+                                        .moveForward,
+                                        .spinLeft,
+                                        .moveForward,
+                                        .moveForward]
+        )
+        XCTAssertEqual(rover2.initialPosition.string, "3 3 E")
+        XCTAssertEqual(rover2.actions, [.moveForward,
+                                        .moveForward,
+                                        .spinRight,
+                                        .moveForward,
+                                        .moveForward,
+                                        .spinRight,
+                                        .moveForward,
+                                        .spinRight,
+                                        .spinRight,
+                                        .moveForward]
+        )
+        
+        //assert output
+        XCTAssertEqual(rover1.finalPosition.string, "1 3 N")
+        XCTAssertEqual(rover2.finalPosition.string, "5 1 E")
+    }
 }
