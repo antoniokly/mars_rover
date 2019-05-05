@@ -18,6 +18,7 @@
 		A4789C60227EC40300614637 /* Coordinate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4789C5F227EC40300614637 /* Coordinate.swift */; };
 		A4789C62227EC44600614637 /* Heading.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4789C61227EC44600614637 /* Heading.swift */; };
 		A4789C64227EC53600614637 /* Action.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4789C63227EC53600614637 /* Action.swift */; };
+		A4789C66227EDD0D00614637 /* Site.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4789C65227EDD0D00614637 /* Site.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -46,6 +47,7 @@
 		A4789C5F227EC40300614637 /* Coordinate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Coordinate.swift; sourceTree = "<group>"; };
 		A4789C61227EC44600614637 /* Heading.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Heading.swift; sourceTree = "<group>"; };
 		A4789C63227EC53600614637 /* Action.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Action.swift; sourceTree = "<group>"; };
+		A4789C65227EDD0D00614637 /* Site.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Site.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -115,6 +117,7 @@
 				A4789C5F227EC40300614637 /* Coordinate.swift */,
 				A4789C61227EC44600614637 /* Heading.swift */,
 				A4789C63227EC53600614637 /* Action.swift */,
+				A4789C65227EDD0D00614637 /* Site.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -223,6 +226,7 @@
 			files = (
 				A4789C62227EC44600614637 /* Heading.swift in Sources */,
 				A4789C3D227EC35D00614637 /* ViewController.swift in Sources */,
+				A4789C66227EDD0D00614637 /* Site.swift in Sources */,
 				A4789C3B227EC35D00614637 /* AppDelegate.swift in Sources */,
 				A4789C5E227EC3F200614637 /* Position.swift in Sources */,
 				A4789C64227EC53600614637 /* Action.swift in Sources */,
