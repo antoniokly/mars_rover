@@ -12,24 +12,36 @@ class Mars_RoverTests: XCTestCase {
     
     override func setUp() {
         super.setUp()
-        // Put setup code here. This method is called before the invocation of each test method in the class.
     }
     
     override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
         super.tearDown()
     }
     
-    func testExample() {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
+    func testMoveForward() {
+        
+        let headings: [Heading] = [.E, .N, .W, .S]
+        
+        let rovers = headings.map({ heading -> Rover in
+            let rover = Rover(name: "Rover \(heading.rawValue)",
+                position: Position(coordinate: Coordinate(x: 1, y: 1), heading: heading)
+            )
+            
+            rover.actions.append(.moveForward)
+            
+            return rover
+        })
+        
+        XCTAssertEqual(rovers[0].initialPosition.string, "1 1 E")
+        XCTAssertEqual(rovers[0].finalPosition.string, "2 1 E")
+        
+        XCTAssertEqual(rovers[1].initialPosition.string, "1 1 N")
+        XCTAssertEqual(rovers[1].finalPosition.string, "1 2 N")
+        
+        XCTAssertEqual(rovers[2].initialPosition.string, "1 1 W")
+        XCTAssertEqual(rovers[2].finalPosition.string, "0 1 W")
+        
+        XCTAssertEqual(rovers[3].initialPosition.string, "1 1 S")
+        XCTAssertEqual(rovers[3].finalPosition.string, "1 0 S")
     }
-    
-    func testPerformanceExample() {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
-        }
-    }
-    
 }
