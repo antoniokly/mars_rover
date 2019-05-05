@@ -43,3 +43,15 @@ enum Action: String {
         }
     }
 }
+
+extension Array where Element == Action {
+    func transform(_ position: Position) -> Position {
+        var newPosition = position
+        
+        for action in self {
+            newPosition = action.transform(newPosition)
+        }
+        
+        return newPosition
+    }
+}

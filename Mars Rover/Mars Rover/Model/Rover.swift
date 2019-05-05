@@ -18,13 +18,7 @@ class Rover {
     }
     
     var finalPosition: Position {
-        var newPosition = initialPosition
-        
-        for action in actions {
-            newPosition = action.transform(newPosition)
-        }
-        
-        return newPosition
+        return actions.transform(initialPosition)
     }
     
     var commandString: String {
