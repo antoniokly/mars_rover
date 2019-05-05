@@ -13,6 +13,10 @@
 		A4789C42227EC35D00614637 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A4789C41227EC35D00614637 /* Assets.xcassets */; };
 		A4789C45227EC35D00614637 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A4789C43227EC35D00614637 /* LaunchScreen.storyboard */; };
 		A4789C50227EC35D00614637 /* Mars_RoverTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4789C4F227EC35D00614637 /* Mars_RoverTests.swift */; };
+		A4789C5C227EC3DF00614637 /* Rover.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4789C5B227EC3DF00614637 /* Rover.swift */; };
+		A4789C5E227EC3F200614637 /* Position.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4789C5D227EC3F200614637 /* Position.swift */; };
+		A4789C60227EC40300614637 /* Coordinate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4789C5F227EC40300614637 /* Coordinate.swift */; };
+		A4789C62227EC44600614637 /* Heading.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4789C61227EC44600614637 /* Heading.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,6 +40,10 @@
 		A4789C4B227EC35D00614637 /* Mars RoverTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Mars RoverTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A4789C4F227EC35D00614637 /* Mars_RoverTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mars_RoverTests.swift; sourceTree = "<group>"; };
 		A4789C51227EC35D00614637 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A4789C5B227EC3DF00614637 /* Rover.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Rover.swift; sourceTree = "<group>"; };
+		A4789C5D227EC3F200614637 /* Position.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Position.swift; sourceTree = "<group>"; };
+		A4789C5F227EC40300614637 /* Coordinate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Coordinate.swift; sourceTree = "<group>"; };
+		A4789C61227EC44600614637 /* Heading.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Heading.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,6 +85,7 @@
 		A4789C39227EC35D00614637 /* Mars Rover */ = {
 			isa = PBXGroup;
 			children = (
+				A4789C5A227EC3C500614637 /* Model */,
 				A4789C3A227EC35D00614637 /* AppDelegate.swift */,
 				A4789C3C227EC35D00614637 /* ViewController.swift */,
 				A4789C3E227EC35D00614637 /* Main.storyboard */,
@@ -94,6 +103,17 @@
 				A4789C51227EC35D00614637 /* Info.plist */,
 			);
 			path = "Mars RoverTests";
+			sourceTree = "<group>";
+		};
+		A4789C5A227EC3C500614637 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				A4789C5B227EC3DF00614637 /* Rover.swift */,
+				A4789C5D227EC3F200614637 /* Position.swift */,
+				A4789C5F227EC40300614637 /* Coordinate.swift */,
+				A4789C61227EC44600614637 /* Heading.swift */,
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -198,8 +218,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A4789C62227EC44600614637 /* Heading.swift in Sources */,
 				A4789C3D227EC35D00614637 /* ViewController.swift in Sources */,
 				A4789C3B227EC35D00614637 /* AppDelegate.swift in Sources */,
+				A4789C5E227EC3F200614637 /* Position.swift in Sources */,
+				A4789C5C227EC3DF00614637 /* Rover.swift in Sources */,
+				A4789C60227EC40300614637 /* Coordinate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
