@@ -20,4 +20,18 @@ struct Action {
             heading: position.heading
         )
     }
+    
+    static let spinLeft = Action(command: "L") { (position) -> Position in
+        return Position(
+            coordinate: position.coordinate,
+            heading: position.heading.left
+        )
+    }
+    
+    static let spinRight = Action(command: "R") { (position) -> Position in
+        return Position(
+            coordinate: position.coordinate,
+            heading: position.heading.right
+        )
+    }
 }

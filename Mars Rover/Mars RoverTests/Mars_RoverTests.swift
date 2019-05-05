@@ -44,4 +44,42 @@ class Mars_RoverTests: XCTestCase {
         XCTAssertEqual(rovers[3].initialPosition.string, "1 1 S")
         XCTAssertEqual(rovers[3].finalPosition.string, "1 0 S")
     }
+    
+    func testSpinLeft() {
+        let rover = Rover(name: "Rover L",
+                          position: Position(coordinate: Coordinate(x: 1, y: 1), heading: .E))
+        
+        XCTAssertEqual(rover.initialPosition.string, "1 1 E")
+        
+        rover.actions.append(.spinLeft)
+        XCTAssertEqual(rover.finalPosition.string, "1 1 N")
+        
+        rover.actions.append(.spinLeft)
+        XCTAssertEqual(rover.finalPosition.string, "1 1 W")
+        
+        rover.actions.append(.spinLeft)
+        XCTAssertEqual(rover.finalPosition.string, "1 1 S")
+        
+        rover.actions.append(.spinLeft)
+        XCTAssertEqual(rover.finalPosition.string, "1 1 E")
+    }
+    
+    func testSpinRight() {
+        let rover = Rover(name: "Rover R",
+                          position: Position(coordinate: Coordinate(x: 1, y: 1), heading: .E))
+        
+        XCTAssertEqual(rover.initialPosition.string, "1 1 E")
+        
+        rover.actions.append(.spinRight)
+        XCTAssertEqual(rover.finalPosition.string, "1 1 S")
+        
+        rover.actions.append(.spinRight)
+        XCTAssertEqual(rover.finalPosition.string, "1 1 W")
+        
+        rover.actions.append(.spinRight)
+        XCTAssertEqual(rover.finalPosition.string, "1 1 N")
+        
+        rover.actions.append(.spinRight)
+        XCTAssertEqual(rover.finalPosition.string, "1 1 E")
+    }
 }
