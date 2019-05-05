@@ -108,7 +108,7 @@ class Mars_RoverTests: XCTestCase {
         let rover = Rover(name: "Rover 1",
                           position: Position(coordinate: Coordinate(x: 1, y: 1), heading: .E))
         
-        rover.commandString = "MLRMRLLLLZZZMM"
+        rover.commandString = "MLRMRLLLLMM"
         
         let expected: [Action] = [
             .moveForward,
@@ -125,6 +125,14 @@ class Mars_RoverTests: XCTestCase {
         ]
         
         XCTAssertEqual(rover.actions, expected)
+    }
+    
+    func testInvalidCommandString() {
+        let commandString = "MLRMRLXXXLZZZMM"
+        
+        let actions = [Action](commandString: commandString)
+        
+        XCTAssertNil(actions)
     }
     
     func testExample() {

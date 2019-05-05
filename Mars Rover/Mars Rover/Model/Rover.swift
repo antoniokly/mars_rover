@@ -24,7 +24,7 @@ class Rover {
     
     var commandString: String {
         get {
-            return actions.command
+            return actions.commandString
         }
         set {
             var newActions: [Action] = []

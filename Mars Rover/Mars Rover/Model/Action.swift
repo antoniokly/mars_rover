@@ -45,8 +45,23 @@ enum Action: String {
 }
 
 extension Array where Element == Action {
-    var command: String {
+    var commandString: String {
         return self.map({$0.command}).joined()
+    }
+    
+    init?(commandString: String) {
+        var actions: [Action] = []
+        
+        for char in commandString {
+            if let action = Action(command: "\(char)") {
+                actions.append(action)
+            } else {
+                NSLog("Unknown command: %@", "\(char)")
+                return nil
+            }
+        }
+        
+        self.init(actions)
     }
 
     func transform(_ position: Position) -> Position {
