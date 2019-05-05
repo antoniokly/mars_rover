@@ -135,6 +135,15 @@ class Mars_RoverTests: XCTestCase {
         XCTAssertNil(actions)
     }
     
+    func testOutOfBound() {
+        let rover1 = Rover(name: "Rover 1", position: Position(coordinate: Coordinate(x: 1, y: 2), heading: .N))
+        rover1.bound = Coordinate(x: 5, y: 5)
+        rover1.commandString = "RMMMMMMMMLLMMMMM"
+        
+        XCTAssertEqual(rover1.commandString, "RMMMM")
+        XCTAssertEqual(rover1.finalPosition.string, "5 2 E")
+    }
+    
     func testExample() {
         let rover1 = Rover(name: "Rover 1", position: Position(coordinate: Coordinate(x: 1, y: 2), heading: .N))
         let rover2 = Rover(name: "Rover 2", position: Position(coordinate: Coordinate(x: 3, y: 3), heading: .E))

@@ -27,14 +27,26 @@ class Rover {
             return actions.commandString
         }
         set {
-            var newActions: [Action] = []
-            
-            for char in newValue {
-                if let action = Action(command: "\(char)") {
-                    newActions.append(action)
-                }
+            guard var newActions: [Action] = Array(commandString: newValue) else {
+                return
             }
             
+            if let limit = bound {
+                NSLog("Validating site boundary: %@", limit.string)
+                
+                var newPosition = initialPosition
+                for i in 0 ..< newActions.count {
+                    let action = newActions[i]
+                    newPosition = newActions[i].transform(newPosition)
+                    if newPosition.coordinate.x > limit.x || newPosition.coordinate.y > limit.y {
+                        NSLog("Out of bound (%@) after step %d (%@). Warning: Command is truncated.", newPosition.string, i, action.command)
+                        
+                        newActions = Array(newActions.prefix(upTo: i))
+                        break
+                    }
+                }
+            }
+
             self.actions = newActions
         }
     }
