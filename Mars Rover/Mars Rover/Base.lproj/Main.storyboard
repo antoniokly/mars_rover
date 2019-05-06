@@ -20,7 +20,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Ladon-basin-in-full-color" translatesAutoresizingMaskIntoConstraints="NO" id="v07-bR-ehU">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="v07-bR-ehU">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                             </imageView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yRL-BO-b57">
@@ -92,6 +92,7 @@ Position:</string>
                                         <state key="normal" title="Add"/>
                                         <connections>
                                             <action selector="addButtonTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="fmv-vL-2s3"/>
+                                            <segue destination="FT7-OA-cMB" kind="presentation" modalPresentationStyle="overFullScreen" modalTransitionStyle="coverVertical" id="ue7-fb-prj"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -143,8 +144,121 @@ Position:</string>
             </objects>
             <point key="canvasLocation" x="136.80000000000001" y="133.00492610837438"/>
         </scene>
+        <!--Add Rover View Controller-->
+        <scene sceneID="sSr-kl-xw7">
+            <objects>
+                <viewController modalPresentationStyle="overFullScreen" id="FT7-OA-cMB" customClass="AddRoverViewController" customModule="Mars_Rover" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="mLn-ZX-zLi">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TCI-BA-uHH">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="uQf-ml-Oxj">
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    <subviews>
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xPK-5e-wG8">
+                                            <rect key="frame" x="324" y="44" width="43" height="33"/>
+                                            <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                            <state key="normal" title="Done"/>
+                                            <connections>
+                                                <action selector="donButtonTapped:" destination="FT7-OA-cMB" eventType="touchUpInside" id="6AL-qZ-b0B"/>
+                                            </connections>
+                                        </button>
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AZn-dv-I5b">
+                                            <rect key="frame" x="8" y="44" width="57" height="33"/>
+                                            <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                            <state key="normal" title="Cancel"/>
+                                            <connections>
+                                                <action selector="cancelButtonTapped:" destination="FT7-OA-cMB" eventType="touchUpInside" id="BQl-I7-FKu"/>
+                                            </connections>
+                                        </button>
+                                        <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="center" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="t9k-VN-eRe">
+                                            <rect key="frame" x="88" y="281" width="200" height="30"/>
+                                            <nil key="textColor"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                            <textInputTraits key="textInputTraits" autocapitalizationType="words" enablesReturnKeyAutomatically="YES"/>
+                                        </textField>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="x" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CaL-CF-cbc">
+                                            <rect key="frame" x="111" y="360" width="9" height="21"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="y" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BOu-v0-Wmj">
+                                            <rect key="frame" x="184" y="360" width="9" height="21"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Rover Name:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="flR-IG-b1N">
+                                            <rect key="frame" x="88" y="252" width="98" height="21"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5I2-Xh-7am">
+                                            <rect key="frame" x="88" y="385" width="200" height="50"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="50" id="iq3-K3-Ag2"/>
+                                            </constraints>
+                                        </pickerView>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Initial Position:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IF9-NH-Oqa">
+                                            <rect key="frame" x="88" y="331" width="110" height="21"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="heading" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oAn-ma-3kD">
+                                            <rect key="frame" x="226" y="360" width="62" height="21"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="IF9-NH-Oqa" firstAttribute="top" secondItem="t9k-VN-eRe" secondAttribute="bottom" constant="20" id="0vB-Nn-uT7"/>
+                                        <constraint firstItem="AZn-dv-I5b" firstAttribute="baseline" secondItem="xPK-5e-wG8" secondAttribute="baseline" id="55c-2U-6Px"/>
+                                        <constraint firstItem="t9k-VN-eRe" firstAttribute="trailing" secondItem="5I2-Xh-7am" secondAttribute="trailing" id="8BK-df-WMw"/>
+                                        <constraint firstItem="5I2-Xh-7am" firstAttribute="top" secondItem="CaL-CF-cbc" secondAttribute="bottom" constant="4" id="Et6-8a-j0l"/>
+                                        <constraint firstItem="t9k-VN-eRe" firstAttribute="top" secondItem="flR-IG-b1N" secondAttribute="bottom" constant="8" symbolic="YES" id="F8U-dl-9AL"/>
+                                        <constraint firstItem="t9k-VN-eRe" firstAttribute="leading" secondItem="IF9-NH-Oqa" secondAttribute="leading" id="LIt-qD-PWB"/>
+                                        <constraint firstItem="flR-IG-b1N" firstAttribute="top" secondItem="uQf-ml-Oxj" secondAttribute="top" constant="252" id="TGr-A7-sih"/>
+                                        <constraint firstItem="flR-IG-b1N" firstAttribute="leading" secondItem="uQf-ml-Oxj" secondAttribute="leading" constant="88" id="a6d-di-ag5"/>
+                                        <constraint firstItem="BOu-v0-Wmj" firstAttribute="leading" secondItem="CaL-CF-cbc" secondAttribute="trailing" constant="64" id="cri-K2-wg6"/>
+                                        <constraint firstItem="IF9-NH-Oqa" firstAttribute="leading" secondItem="5I2-Xh-7am" secondAttribute="leading" id="ecq-lZ-Erx"/>
+                                        <constraint firstItem="oAn-ma-3kD" firstAttribute="baseline" secondItem="BOu-v0-Wmj" secondAttribute="baseline" id="gT2-KW-A3i"/>
+                                        <constraint firstItem="CaL-CF-cbc" firstAttribute="top" secondItem="IF9-NH-Oqa" secondAttribute="bottom" constant="8" symbolic="YES" id="hsW-wa-baJ"/>
+                                        <constraint firstItem="BOu-v0-Wmj" firstAttribute="centerX" secondItem="5I2-Xh-7am" secondAttribute="centerX" id="izI-Yh-7Z5"/>
+                                        <constraint firstItem="CaL-CF-cbc" firstAttribute="baseline" secondItem="BOu-v0-Wmj" secondAttribute="baseline" id="jZK-XG-TJN"/>
+                                        <constraint firstItem="AZn-dv-I5b" firstAttribute="top" secondItem="uQf-ml-Oxj" secondAttribute="top" constant="44" id="jjW-Gf-9X7"/>
+                                        <constraint firstItem="AZn-dv-I5b" firstAttribute="leading" secondItem="uQf-ml-Oxj" secondAttribute="leadingMargin" id="mhd-6H-ZeB"/>
+                                        <constraint firstItem="t9k-VN-eRe" firstAttribute="centerX" secondItem="uQf-ml-Oxj" secondAttribute="centerX" id="qPf-GG-GLp"/>
+                                        <constraint firstItem="flR-IG-b1N" firstAttribute="leading" secondItem="t9k-VN-eRe" secondAttribute="leading" id="rl5-5f-4fn"/>
+                                        <constraint firstItem="xPK-5e-wG8" firstAttribute="trailing" secondItem="uQf-ml-Oxj" secondAttribute="trailingMargin" id="vtg-YO-NCU"/>
+                                        <constraint firstItem="oAn-ma-3kD" firstAttribute="trailing" secondItem="5I2-Xh-7am" secondAttribute="trailing" id="wpJ-Pi-061"/>
+                                    </constraints>
+                                </view>
+                                <blurEffect style="extraLight"/>
+                            </visualEffectView>
+                        </subviews>
+                        <constraints>
+                            <constraint firstItem="TCI-BA-uHH" firstAttribute="leading" secondItem="mLn-ZX-zLi" secondAttribute="leading" id="SNf-bv-PjG"/>
+                            <constraint firstAttribute="bottom" secondItem="TCI-BA-uHH" secondAttribute="bottom" id="WKo-Ma-XsR"/>
+                            <constraint firstAttribute="trailing" secondItem="TCI-BA-uHH" secondAttribute="trailing" id="bYI-Zv-hSX"/>
+                            <constraint firstItem="TCI-BA-uHH" firstAttribute="top" secondItem="mLn-ZX-zLi" secondAttribute="top" id="uNk-co-qrz"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="paQ-j3-ZOI"/>
+                    </view>
+                    <connections>
+                        <outlet property="nameTextField" destination="t9k-VN-eRe" id="alk-ZG-FEm"/>
+                        <outlet property="positionPicker" destination="5I2-Xh-7am" id="d6P-Z9-wVg"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Hby-IF-tkj" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1093.5999999999999" y="132.26600985221674"/>
+        </scene>
     </scenes>
-    <resources>
-        <image name="Ladon-basin-in-full-color" width="1500" height="671"/>
-    </resources>
 </document>

@@ -12,12 +12,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var gridView: UIView!
    
     @IBAction func addButtonTapped(_ sender: Any) {
-        let name = "Rover \(site.rovers.count + 1)"
         
-        let rover = Rover(name: name, position: Position(coordinate: Coordinate(x: 0,y: 0), heading: .E))
-        
-        site.rovers.append(rover)
-        selectedRover = rover
     }
     
     @IBAction func moveButtonTapped(_ sender: Any) {
@@ -49,7 +44,7 @@ class ViewController: UIViewController {
         updateStatus()
     }
     
-    @IBAction func replayButtonTapped(_ sender: Any) {
+    @IBAction func doneButtonTapped(_ sender: Any) {
         
     }
     
@@ -65,7 +60,7 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        view.backgroundColor = UIColor(patternImage: #imageLiteral(resourceName: "Mars"))
         site = Site(name: "Mars", grid: Coordinate(x: Int(view.bounds.width / 10.0), y: Int(view.bounds.height / 10.0)), rovers: [])
         updateStatus()
     }
@@ -73,6 +68,12 @@ class ViewController: UIViewController {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let vc = segue.destination as? AddRoverViewController {
+            vc.mainVC = self
+        }
     }
 
     
