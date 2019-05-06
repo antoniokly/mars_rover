@@ -20,14 +20,15 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="v07-bR-ehU">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Ladon-basin-in-full-color" translatesAutoresizingMaskIntoConstraints="NO" id="v07-bR-ehU">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                             </imageView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yRL-BO-b57">
                                 <rect key="frame" x="0.0" y="44" width="375" height="734"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Jsx-zd-vZU">
-                                        <rect key="frame" x="168.66666666666666" y="674" width="38" height="60"/>
+                                        <rect key="frame" x="166" y="674" width="44" height="60"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                         <state key="normal" title="Undo"/>
                                         <connections>
                                             <action selector="undoButtonTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="mHa-oh-yUB"/>
@@ -35,23 +36,26 @@
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="u3A-7E-bty">
                                         <rect key="frame" x="89.666666666666671" y="606" width="60.000000000000014" height="60"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
                                         <state key="normal" title="L"/>
                                         <connections>
                                             <action selector="leftButtonTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="h4a-eM-jev"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="g5e-lc-Mji">
-                                        <rect key="frame" x="100.66666666666667" y="689" width="39.000000000000014" height="30"/>
+                                        <rect key="frame" x="97" y="687.66666666666663" width="47" height="33"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                         <state key="normal" title="Reset"/>
                                         <connections>
                                             <action selector="resetButtonTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="1Ya-gf-TQh"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KKr-ca-2b7">
-                                        <rect key="frame" x="237.66666666666663" y="689" width="37" height="30"/>
+                                        <rect key="frame" x="235" y="687.66666666666663" width="43" height="33"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                         <state key="normal" title="Done"/>
                                         <connections>
-                                            <action selector="replayButtonTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="ezd-pg-d5U"/>
+                                            <action selector="doneButtonTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="ezd-pg-d5U"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QQP-oP-4k6">
@@ -60,6 +64,7 @@
                                             <constraint firstAttribute="width" constant="60" id="Clj-Cs-WZw"/>
                                             <constraint firstAttribute="width" secondItem="QQP-oP-4k6" secondAttribute="height" multiplier="1:1" id="m9O-xq-pI0"/>
                                         </constraints>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
                                         <state key="normal" title="M"/>
                                         <connections>
                                             <action selector="moveButtonTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="1pB-lU-XKk"/>
@@ -67,21 +72,23 @@
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cai-vz-h4X">
                                         <rect key="frame" x="225.66666666666666" y="606" width="59.999999999999972" height="60"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
                                         <state key="normal" title="R"/>
                                         <connections>
                                             <action selector="rightButtonTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Zbt-nj-fO9"/>
                                         </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AcX-Za-lJJ">
-                                        <rect key="frame" x="8" y="0.0" width="65.666666666666671" height="40.666666666666664"/>
+                                        <rect key="frame" x="8" y="0.0" width="72" height="40.666666666666664"/>
                                         <string key="text">Name:
 Position:</string>
-                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <nil key="textColor"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rGz-BP-K0W">
-                                        <rect key="frame" x="337" y="0.0" width="30" height="30"/>
+                                        <rect key="frame" x="334" y="0.0" width="33" height="33"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                         <state key="normal" title="Add"/>
                                         <connections>
                                             <action selector="addButtonTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="fmv-vL-2s3"/>
@@ -137,4 +144,7 @@ Position:</string>
             <point key="canvasLocation" x="136.80000000000001" y="133.00492610837438"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="Ladon-basin-in-full-color" width="1500" height="671"/>
+    </resources>
 </document>
