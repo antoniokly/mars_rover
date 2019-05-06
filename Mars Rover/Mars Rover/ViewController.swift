@@ -21,19 +21,32 @@ class ViewController: UIViewController {
     }
     
     @IBAction func moveButtonTapped(_ sender: Any) {
-        
+        selectedRover?.actions.append(.moveForward)
+        updateStatus()
     }
     
     @IBAction func leftButtonTapped(_ sender: Any) {
+        selectedRover?.actions.append(.spinLeft)
+        updateStatus()
     }
     
     @IBAction func rightButtonTapped(_ sender: Any) {
+        selectedRover?.actions.append(.spinRight)
+        updateStatus()
     }
     
     @IBAction func resetButtonTapped(_ sender: Any) {
+        for rover in site.rovers {
+            rover.actions.removeAll()
+        }
+        updateStatus()
     }
     
     @IBAction func undoButtonTapped(_ sender: Any) {
+        if selectedRover?.actions.count != 0 {
+            selectedRover?.actions.removeLast()
+        }
+        updateStatus()
     }
     
     @IBAction func replayButtonTapped(_ sender: Any) {
