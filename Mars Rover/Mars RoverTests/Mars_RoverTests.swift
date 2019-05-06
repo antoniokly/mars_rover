@@ -125,6 +125,7 @@ class Mars_RoverTests: XCTestCase {
         ]
         
         XCTAssertEqual(rover.actions, expected)
+        XCTAssertEqual(rover.commandString, "MLRMRLLLLMM")
     }
     
     func testInvalidCommandString() {
