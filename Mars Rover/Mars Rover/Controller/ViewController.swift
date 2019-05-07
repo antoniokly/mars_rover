@@ -7,7 +7,10 @@
 
 import UIKit
 
+let gridSize = CGSize(width: 42, height: 42)
+
 class ViewController: UIViewController {
+    
     
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var groundView: UIImageView!
@@ -22,18 +25,41 @@ class ViewController: UIViewController {
     }
     
     @IBAction func moveButtonTapped(_ sender: Any) {
-        selectedRover?.actions.append(.moveForward)
-        updateStatus()
+        guard let rover = selectedRover, let roverView = roverViews[rover] else {
+            return
+        }
+        
+        let vector = rover.finalPosition.heading.vector
+        
+        rover.actions.append(.moveForward)
+        
+        self.updateStatus()
+        
+        roverView.move(x: vector.x * gridSize.width, y: -vector.y * gridSize.height)
     }
     
     @IBAction func leftButtonTapped(_ sender: Any) {
-        selectedRover?.actions.append(.spinLeft)
-        updateStatus()
+        guard let rover = selectedRover, let roverView = roverViews[rover] else {
+            return
+        }
+        
+        rover.actions.append(.spinLeft)
+        
+        self.updateStatus()
+        
+        roverView.rotate(angle: -CGFloat.pi / 2)
     }
     
     @IBAction func rightButtonTapped(_ sender: Any) {
-        selectedRover?.actions.append(.spinRight)
-        updateStatus()
+        guard let rover = selectedRover, let roverView = roverViews[rover] else {
+            return
+        }
+        
+        rover.actions.append(.spinRight)
+        
+        self.updateStatus()
+        
+        roverView.rotate(angle: CGFloat.pi / 2)
     }
     
     @IBAction func resetButtonTapped(_ sender: Any) {
@@ -50,7 +76,7 @@ class ViewController: UIViewController {
         updateStatus()
     }
     
-    @IBAction func doneButtonTapped(_ sender: Any) {
+    @IBAction func replyButtonTapped(_ sender: Any) {
         
     }
     
@@ -64,6 +90,9 @@ class ViewController: UIViewController {
         }
     }
     
+    var roverViews: [Rover: UIView] = [:]
+    
+    
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
     }
@@ -71,12 +100,17 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         groundView.backgroundColor = UIColor(patternImage: #imageLiteral(resourceName: "Mars"))
-        groundViewWidth.constant = 2000
-        groundViewHeight.constant = 2000
-        
         gridView.backgroundColor = UIColor(patternImage: UIImage(imageLiteralResourceName: "grid-42"))
         
-        site = Site(name: "Mars", grid: Coordinate(x: Int(view.bounds.width / 10.0), y: Int(view.bounds.height / 10.0)), rovers: [])
+        site = Site(name: "Mars",
+                    grid: Coordinate(
+                        x: Int(ceil(view.bounds.width / gridSize.width)),
+                        y: Int(ceil(view.bounds.height / gridSize.height))),
+                    rovers: [])
+        
+        groundViewWidth.constant = CGFloat(site.grid.x) * gridSize.width
+        groundViewHeight.constant = CGFloat(site.grid.y) * gridSize.height
+        
         updateStatus()
     }
     
@@ -104,16 +138,80 @@ class ViewController: UIViewController {
     func updateStatus() {
         if let rover = selectedRover {
             statusLabel.text = """
-            Name: \(rover.name)
+            \(rover.name)
             Position: \(rover.finalPosition.string)
             """
         } else {
             statusLabel.text = nil
         }
     }
+    
+    func addRover(_ rover: Rover) {
+        site.rovers.append(rover)
+        selectedRover = rover
+        
+        let view = UIImageView(image: UIImage(imageLiteralResourceName: "rover"))
+        
+        let point = toPoint(rover.initialPosition.coordinate)
+        
+        view.frame = CGRect(origin: point, size: gridSize)
+        
+        gridView.addSubview(view)
+        
+        roverViews[rover] = view
+    }
+    
+    func toPoint(_ coordinate: Coordinate) -> CGPoint {
+        
+        return CGPoint(
+            x: CGFloat(coordinate.x) * gridSize.width,
+            y: CGFloat(site.grid.y - coordinate.y - 1) * gridSize.height)
+    }
 
 }
 
 extension ViewController: UIScrollViewDelegate {
     
+}
+
+
+public func +(lhs: CGPoint, rhs: CGPoint) -> CGPoint {
+    return CGPoint(x: lhs.x + rhs.x, y: lhs.y + rhs.y)
+}
+
+extension Heading {
+    var vector: CGPoint {
+        switch self {
+        case .E:
+            return CGPoint(x: 1, y: 0)
+        case .N:
+            return CGPoint(x: 0, y: 1)
+        case .W:
+            return CGPoint(x: -1, y: 0)
+        case .S:
+            return CGPoint(x: 0, y: -1)
+        }
+    }
+}
+
+extension UIView {
+    func move(x: CGFloat, y: CGFloat) {
+        UIView.animate(withDuration: 0.5,
+                       delay: 0,
+                       options: [.beginFromCurrentState],
+                       animations: {
+                        self.center = self.center.applying(
+                            CGAffineTransform(translationX: x, y: y))
+                        
+        })
+    }
+    
+    func rotate(angle: CGFloat) {
+        UIView.animate(withDuration: 0.5,
+                       delay: 0,
+                       options: [.beginFromCurrentState],
+                       animations: {
+                        self.transform = self.transform.concatenating(CGAffineTransform(rotationAngle: angle))
+        })
+    }
 }

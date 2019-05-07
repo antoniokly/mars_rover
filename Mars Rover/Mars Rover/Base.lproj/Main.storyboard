@@ -92,7 +92,7 @@ Position:</string>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                         <state key="normal" title="Done"/>
                                         <connections>
-                                            <action selector="doneButtonTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="ezd-pg-d5U"/>
+                                            <action selector="replyButtonTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="ezd-pg-d5U"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QQP-oP-4k6">

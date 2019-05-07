@@ -52,3 +52,13 @@ class Rover {
         }
     }
 }
+
+extension Rover: Hashable {
+    static func == (lhs: Rover, rhs: Rover) -> Bool {
+        return ObjectIdentifier(lhs) == ObjectIdentifier(rhs)
+    }
+    
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(ObjectIdentifier(self).hashValue)
+    }
+}

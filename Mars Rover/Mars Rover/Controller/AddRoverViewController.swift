@@ -22,10 +22,9 @@ class AddRoverViewController: UIViewController {
         }
         
         let newRover = Rover(name: name, position: Position(coordinate: Coordinate(x: x, y: y), heading: heading))
-        mainVC.site.rovers.append(newRover)
         
         dismiss(animated: true) {
-            self.mainVC.selectedRover = newRover
+            self.mainVC.addRover(newRover)
         }
     }
     
@@ -58,16 +57,7 @@ class AddRoverViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
+    
 
 }
 
