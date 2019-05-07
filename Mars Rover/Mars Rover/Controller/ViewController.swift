@@ -8,8 +8,14 @@
 import UIKit
 
 class ViewController: UIViewController {
-    @IBOutlet weak var backgroundImageView: UIImageView!
-    @IBOutlet weak var gridView: UIView!
+    
+    @IBOutlet weak var scrollView: UIScrollView!
+    @IBOutlet weak var groundView: UIImageView!
+    @IBOutlet weak var groundViewWidth: NSLayoutConstraint!
+    @IBOutlet weak var groundViewHeight: NSLayoutConstraint!
+    @IBOutlet weak var gridView: UIImageView!
+    
+    @IBOutlet weak var controlsView: UIView!
    
     @IBAction func addButtonTapped(_ sender: Any) {
         
@@ -58,11 +64,29 @@ class ViewController: UIViewController {
         }
     }
     
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = UIColor(patternImage: #imageLiteral(resourceName: "Mars"))
+        groundView.backgroundColor = UIColor(patternImage: #imageLiteral(resourceName: "Mars"))
+        groundViewWidth.constant = 2000
+        groundViewHeight.constant = 2000
+        
+        gridView.backgroundColor = UIColor(patternImage: UIImage(imageLiteralResourceName: "grid-42"))
+        
         site = Site(name: "Mars", grid: Coordinate(x: Int(view.bounds.width / 10.0), y: Int(view.bounds.height / 10.0)), rovers: [])
         updateStatus()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        let yOffset = max(0, (groundViewHeight.constant - scrollView.bounds.height))
+        
+        scrollView.setContentOffset(CGPoint(x: 0, y: yOffset), animated: true)
+        
     }
 
     override func didReceiveMemoryWarning() {
@@ -90,3 +114,6 @@ class ViewController: UIViewController {
 
 }
 
+extension ViewController: UIScrollViewDelegate {
+    
+}
