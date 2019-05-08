@@ -7,7 +7,7 @@
 
 import UIKit
 
-let gridSize = CGSize(width: 42, height: 42)
+let gridSize: CGFloat = 42
 
 class ViewController: UIViewController {
     
@@ -29,13 +29,18 @@ class ViewController: UIViewController {
             return
         }
         
-        let vector = rover.finalPosition.heading.vector
+        let angle = CGFloat(rover.finalPosition.heading.angle)
         
         rover.actions.append(.moveForward)
         
-        self.updateStatus()
+        let animation = roverView.moveAnimationBlock(distance: gridSize,
+                                                     angle: angle)
         
-        roverView.move(x: vector.x * gridSize.width, y: -vector.y * gridSize.height)
+        UIView.animate(withDuration: 0.5,
+                       delay: 0,
+                       options: [],
+                       animations: animation,
+                       completion: { _ in self.updateStatus(for: rover) })
     }
     
     @IBAction func leftButtonTapped(_ sender: Any) {
@@ -45,9 +50,13 @@ class ViewController: UIViewController {
         
         rover.actions.append(.spinLeft)
         
-        self.updateStatus()
+        let animation = roverView.rotateAnimationBlock(angle: CGFloat.pi / 2)
         
-        roverView.rotate(angle: -CGFloat.pi / 2)
+        UIView.animate(withDuration: 0.5,
+                       delay: 0,
+                       options: [],
+                       animations: animation,
+                       completion: { _ in self.updateStatus(for: rover) })
     }
     
     @IBAction func rightButtonTapped(_ sender: Any) {
@@ -57,40 +66,111 @@ class ViewController: UIViewController {
         
         rover.actions.append(.spinRight)
         
-        self.updateStatus()
+        let animation = roverView.rotateAnimationBlock(angle: -CGFloat.pi / 2)
         
-        roverView.rotate(angle: CGFloat.pi / 2)
+        UIView.animate(withDuration: 0.5,
+                       delay: 0,
+                       options: [],
+                       animations: animation,
+                       completion: { _ in self.updateStatus(for: rover) })
     }
     
     @IBAction func resetButtonTapped(_ sender: Any) {
         for rover in site.rovers {
             rover.actions.removeAll()
         }
-        updateStatus()
+        statusLabel.text = nil
     }
     
     @IBAction func undoButtonTapped(_ sender: Any) {
-        if selectedRover?.actions.count != 0 {
-            selectedRover?.actions.removeLast()
+        guard let rover = selectedRover else {
+            return
         }
-        updateStatus()
+        
+        if rover.actions.count != 0 {
+            rover.actions.removeLast()
+        }
+        
+        
+        
+        updateStatus(for: rover)
     }
     
     @IBAction func replyButtonTapped(_ sender: Any) {
+        //TODO: disable buttons
         
+        animationQueue = []
+        
+        for rover in site.rovers {
+            roverViews[rover]?.removeFromSuperview()
+            
+            let view = createViewForRover(rover)
+            roverViews[rover] = view
+            gridView.addSubview(view)
+            
+            var position = rover.initialPosition
+            
+            animationQueue.append(contentsOf: rover.actions.map { (action) -> () -> Void in
+                
+                switch action {
+                case .moveForward:
+                    return { [weak self] in
+                        let angle = CGFloat(position.heading.angle)
+                        position = action.transform(position)
+                        view.moveAnimationBlock(distance: gridSize, angle: angle)()
+                        self?.updateStatus(for: rover, at: position)
+                    }
+                case .spinLeft:
+                    return { [weak self] in
+                        position = action.transform(position)
+                        view.rotateAnimationBlock(angle: CGFloat.pi / 2)()
+                        self?.updateStatus(for: rover, at: position)
+                    }
+                case .spinRight:
+                    return { [weak self] in
+                        position = action.transform(position)
+                        view.rotateAnimationBlock(angle: -CGFloat.pi / 2)()
+                        self?.updateStatus(for: rover, at: position)
+                    }
+                }
+            })
+        }
+        
+        drainAnimationQueue()
     }
     
+    
+    func drainAnimationQueue() {
+        guard !animationQueue.isEmpty else {
+            //TODO: re-enable buttons
+            return
+        }
+        
+        let animation = animationQueue.removeFirst()
+        
+        UIView.animate(withDuration: 0.5,
+                       delay: 0,
+                       options: [.beginFromCurrentState, .curveLinear],
+                       animations: animation,
+                       completion: { (finish) in self.drainAnimationQueue() })
+    }
+    
+    
     @IBOutlet weak var statusLabel: UILabel!
+    
+    var animationQueue: [() -> Void] = []
     
     var site: Site!
     
     var selectedRover: Rover? {
         didSet {
-            updateStatus()
+            updateStatus(for: selectedRover)
         }
     }
     
-    var roverViews: [Rover: UIView] = [:]
+    var roverViews: [Rover: RoverView] = [:]
+    
+//    var roverAnimations: [Rover: [() -> Void]] = [:]
     
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -104,14 +184,14 @@ class ViewController: UIViewController {
         
         site = Site(name: "Mars",
                     grid: Coordinate(
-                        x: Int(ceil(view.bounds.width / gridSize.width)),
-                        y: Int(ceil(view.bounds.height / gridSize.height))),
+                        x: Int(ceil(view.bounds.width / gridSize)),
+                        y: Int(ceil(view.bounds.height / gridSize))),
                     rovers: [])
         
-        groundViewWidth.constant = CGFloat(site.grid.x) * gridSize.width
-        groundViewHeight.constant = CGFloat(site.grid.y) * gridSize.height
+        groundViewWidth.constant = CGFloat(site.grid.x) * gridSize
+        groundViewHeight.constant = CGFloat(site.grid.y) * gridSize
         
-        updateStatus()
+        statusLabel.text = nil
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -133,85 +213,41 @@ class ViewController: UIViewController {
             vc.mainVC = self
         }
     }
-
     
-    func updateStatus() {
-        if let rover = selectedRover {
-            statusLabel.text = """
-            \(rover.name)
-            Position: \(rover.finalPosition.string)
-            """
-        } else {
+    func updateStatus(for rover: Rover?, at position: Position? = nil) {
+        guard let rover = rover else {
             statusLabel.text = nil
+            return
         }
+        
+        statusLabel.text = """
+        \(rover.name)
+        Position: \(position?.string ?? rover.finalPosition.string)
+        """
     }
     
     func addRover(_ rover: Rover) {
         site.rovers.append(rover)
         selectedRover = rover
         
-        let view = UIImageView(image: UIImage(imageLiteralResourceName: "rover"))
-        
-        let point = toPoint(rover.initialPosition.coordinate)
-        
-        view.frame = CGRect(origin: point, size: gridSize)
-        
-        gridView.addSubview(view)
-        
+        let view = createViewForRover(rover)
         roverViews[rover] = view
+        gridView.addSubview(view)
     }
     
-    func toPoint(_ coordinate: Coordinate) -> CGPoint {
+    func createViewForRover(_ rover: Rover) -> RoverView {
+        let unitSize = CGSize(width: gridSize, height: gridSize)
+        let position = rover.initialPosition
+        let point = convertToPoint(position.coordinate, in: site.grid, unitSize: unitSize)
         
-        return CGPoint(
-            x: CGFloat(coordinate.x) * gridSize.width,
-            y: CGFloat(site.grid.y - coordinate.y - 1) * gridSize.height)
-    }
+        let view = RoverView(rover: rover)
+        view.frame = CGRect(origin: point, size: unitSize)
+        view.rotateAnimationBlock(angle: CGFloat(position.heading.angle))()
 
-}
-
-extension ViewController: UIScrollViewDelegate {
-    
-}
-
-
-public func +(lhs: CGPoint, rhs: CGPoint) -> CGPoint {
-    return CGPoint(x: lhs.x + rhs.x, y: lhs.y + rhs.y)
-}
-
-extension Heading {
-    var vector: CGPoint {
-        switch self {
-        case .E:
-            return CGPoint(x: 1, y: 0)
-        case .N:
-            return CGPoint(x: 0, y: 1)
-        case .W:
-            return CGPoint(x: -1, y: 0)
-        case .S:
-            return CGPoint(x: 0, y: -1)
-        }
+        return view
     }
 }
 
-extension UIView {
-    func move(x: CGFloat, y: CGFloat) {
-        UIView.animate(withDuration: 0.5,
-                       delay: 0,
-                       options: [.beginFromCurrentState],
-                       animations: {
-                        self.center = self.center.applying(
-                            CGAffineTransform(translationX: x, y: y))
-                        
-        })
-    }
-    
-    func rotate(angle: CGFloat) {
-        UIView.animate(withDuration: 0.5,
-                       delay: 0,
-                       options: [.beginFromCurrentState],
-                       animations: {
-                        self.transform = self.transform.concatenating(CGAffineTransform(rotationAngle: angle))
-        })
-    }
-}
+
+
+
