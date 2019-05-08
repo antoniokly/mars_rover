@@ -47,7 +47,6 @@ class ViewController: UIViewController {
                         if !visible.intersects(roverView.frame) {
                             self.centreScrollView(for: rover)
                         }
-                        
         })
     }
     
@@ -64,7 +63,9 @@ class ViewController: UIViewController {
                        delay: 0,
                        options: [],
                        animations: animation,
-                       completion: { _ in self.updateStatus(for: rover) })
+                       completion: { _ in
+                        self.updateStatus(for: rover)
+        })
     }
     
     @IBAction func rightButtonTapped(_ sender: Any) {
@@ -80,7 +81,9 @@ class ViewController: UIViewController {
                        delay: 0,
                        options: [],
                        animations: animation,
-                       completion: { _ in self.updateStatus(for: rover) })
+                       completion: { _ in
+                        self.updateStatus(for: rover)
+        })
     }
     
     @IBAction func resetButtonTapped(_ sender: Any) {
@@ -119,6 +122,7 @@ class ViewController: UIViewController {
             let view = createViewForRover(rover)
             roverViews[rover] = view
             gridView.addSubview(view)
+            view.startFlashing()
             
             var position = rover.initialPosition
             
@@ -185,10 +189,16 @@ class ViewController: UIViewController {
     var selectedRover: Rover? {
         didSet {
             updateStatus(for: selectedRover)
+            
+            for rover in site.rovers {
+                if let v = roverViews[rover] {
+                    rover == selectedRover ? v.startFlashing() : v.stopFlashing()
+                }
+            }
         }
     }
     
-    var roverViews: [Rover: UIView] = [:]
+    var roverViews: [Rover: RoverView] = [:]
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
@@ -198,7 +208,7 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         scrollView.backgroundColor = UIColor(patternImage: #imageLiteral(resourceName: "Mars"))
         groundView.backgroundColor = UIColor(patternImage: #imageLiteral(resourceName: "Mars"))
-        gridView.backgroundColor = UIColor(patternImage: UIImage(imageLiteralResourceName: "grid-42"))
+        gridView.backgroundColor = UIColor(patternImage: UIImage(imageLiteralResourceName: "grid-84"))
         
         let siteSize = Int(ceil(max(view.bounds.width, view.bounds.height) / gridSize))
         
@@ -259,16 +269,16 @@ class ViewController: UIViewController {
     
     func addRover(_ rover: Rover) {
         site.rovers.append(rover)
-        selectedRover = rover
         
         let view = createViewForRover(rover)
         roverViews[rover] = view
         gridView.addSubview(view)
         
+        selectedRover = rover
         centreScrollView(for: rover)
     }
     
-    func createViewForRover(_ rover: Rover) -> UIView {
+    func createViewForRover(_ rover: Rover) -> RoverView {
         let unitSize = CGSize(width: gridSize, height: gridSize)
         let position = rover.initialPosition
         let point = convertToPoint(position.coordinate, in: site.grid, unitSize: unitSize)

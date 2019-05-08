@@ -19,13 +19,39 @@ class RoverView: UIImageView {
     }
     */
     
+    var square: UIView!
+    
     init(rover: Rover) {
         self.rover = rover
         super.init(image: UIImage(imageLiteralResourceName: "rover-top"))
+        
+        square = UIView(frame: CGRect(origin: .zero, size: CGSize(width: gridSize, height: gridSize)))
+        
+        square.layer.borderColor = UIColor.red.cgColor
+        square.layer.borderWidth = 3
+        square.layer.opacity = 0
+        
+        addSubview(square)
     }
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
     
+    func startFlashing() {
+        let animation = CABasicAnimation(keyPath: "opacity")
+        animation.fromValue = 0
+        animation.toValue = 0.5
+        animation.duration = 1
+        animation.autoreverses = true
+        animation.repeatCount = .infinity
+        animation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
+        square.layer.add(animation, forKey: "opacity")
+        square.isHidden = false
+    }
+    
+    func stopFlashing() {
+        square.layer.removeAllAnimations()
+        square.isHidden = true
+    }
 }
