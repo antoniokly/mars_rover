@@ -12,6 +12,15 @@ class Site {
     var grid: Coordinate
     var rovers: [Rover]
     
+    var commandString: String {
+        var strings = [ grid.string ]
+        let r = rovers.map({"\($0.initialPosition.string)\n\($0.commandString)"})
+        
+        strings.append(contentsOf: r)
+        
+        return strings.joined(separator: "\n")
+    }
+    
     init(name: String, grid: Coordinate, rovers: [Rover] ) {
         self.name = name
         self.grid = grid

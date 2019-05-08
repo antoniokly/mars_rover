@@ -11,6 +11,47 @@ let gridSize: CGFloat = 84
 
 class ViewController: UIViewController {
     
+    var animationQueue: [() -> Void] = []
+    
+    var site: Site! {
+        didSet {
+            statusLabel.text = nil
+            animationQueue = []
+            
+            for v in roverViews.values {
+                v.removeFromSuperview()
+            }
+
+            groundViewWidth.constant = max(CGFloat(site.grid.x + 1) * gridSize, view.bounds.width)
+            groundViewHeight.constant = max(CGFloat(site.grid.y + 1) * gridSize, view.bounds.height)
+            
+            if let rover = site.rovers.first {
+                centreScrollView(for: rover)
+            } else {
+                let yOffset = max(0, (groundViewHeight.constant - scrollView.bounds.height))
+                scrollView.setContentOffset(CGPoint(x: 0, y: yOffset), animated: true)
+            }
+        }
+    }
+    
+    var selectedRover: Rover? {
+        didSet {
+            updateStatus(for: selectedRover)
+            
+            for rover in site.rovers {
+                if let v = roverViews[rover] {
+                    if rover == selectedRover {
+                        v.startFlashing()
+                    } else {
+                        v.stopFlashing()
+                    }
+                }
+            }
+        }
+    }
+    
+    var roverViews: [Rover: RoverView] = [:]
+    
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var groundView: UIImageView!
     @IBOutlet weak var groundViewWidth: NSLayoutConstraint!
@@ -114,15 +155,20 @@ class ViewController: UIViewController {
     @IBAction func replyButtonTapped(_ sender: Any) {
         //TODO: disable buttons
         
+        replay()
+    }
+    
+    func replay() {
         animationQueue = []
         
+        for v in roverViews.values {
+            v.removeFromSuperview()
+        }
+        
         for rover in site.rovers {
-            roverViews[rover]?.removeFromSuperview()
-            
             let view = createViewForRover(rover)
             roverViews[rover] = view
             gridView.addSubview(view)
-            view.startFlashing()
             
             var position = rover.initialPosition
             
@@ -133,11 +179,12 @@ class ViewController: UIViewController {
                     return { [weak self] in
                         guard self != nil else {return}
                         
+                        self!.selectedRover = rover
                         let angle = CGFloat(position.heading.angle)
                         position = action.transform(position)
                         view.moveAnimationBlock(distance: gridSize, angle: angle)()
                         self!.updateStatus(for: rover, at: position)
-
+                        
                         let visible = CGRect(origin: self!.scrollView.frame.origin + self!.scrollView.contentOffset, size: self!.scrollView.frame.size)
                         
                         if !visible.intersects(view.frame) {
@@ -146,15 +193,21 @@ class ViewController: UIViewController {
                     }
                 case .spinLeft:
                     return { [weak self] in
+                        guard self != nil else {return}
+                        
+                        self!.selectedRover = rover
                         position = action.transform(position)
                         view.rotateAnimationBlock(angle: CGFloat.pi / 2)()
-                        self?.updateStatus(for: rover, at: position)
+                        self!.updateStatus(for: rover, at: position)
                     }
                 case .spinRight:
                     return { [weak self] in
+                        guard self != nil else {return}
+                        
+                        self!.selectedRover = rover
                         position = action.transform(position)
                         view.rotateAnimationBlock(angle: -CGFloat.pi / 2)()
-                        self?.updateStatus(for: rover, at: position)
+                        self!.updateStatus(for: rover, at: position)
                     }
                 }
             })
@@ -162,7 +215,6 @@ class ViewController: UIViewController {
         
         drainAnimationQueue()
     }
-    
     
     func drainAnimationQueue() {
         guard !animationQueue.isEmpty else {
@@ -182,24 +234,6 @@ class ViewController: UIViewController {
     
     @IBOutlet weak var statusLabel: UILabel!
     
-    var animationQueue: [() -> Void] = []
-    
-    var site: Site!
-    
-    var selectedRover: Rover? {
-        didSet {
-            updateStatus(for: selectedRover)
-            
-            for rover in site.rovers {
-                if let v = roverViews[rover] {
-                    rover == selectedRover ? v.startFlashing() : v.stopFlashing()
-                }
-            }
-        }
-    }
-    
-    var roverViews: [Rover: RoverView] = [:]
-    
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
     }
@@ -215,19 +249,10 @@ class ViewController: UIViewController {
         site = Site(name: "Mars",
                     grid: Coordinate(x: siteSize, y: siteSize),
                     rovers: [])
-        
-        groundViewWidth.constant = CGFloat(site.grid.x) * gridSize
-        groundViewHeight.constant = CGFloat(site.grid.y) * gridSize
-        
-        statusLabel.text = nil
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
-        let yOffset = max(0, (groundViewHeight.constant - scrollView.bounds.height))
-        
-        scrollView.setContentOffset(CGPoint(x: 0, y: yOffset), animated: true)
     }
 
     override func didReceiveMemoryWarning() {
@@ -237,6 +262,8 @@ class ViewController: UIViewController {
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let vc = segue.destination as? AddRoverViewController {
+            vc.mainVC = self
+        } else if let vc = segue.destination as? CommandInputViewController {
             vc.mainVC = self
         }
     }
@@ -298,7 +325,3 @@ class ViewController: UIViewController {
         selectedRover = (sender.view as? RoverView)?.rover
     }
 }
-
-
-
-
