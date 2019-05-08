@@ -12,13 +12,14 @@ public func +(lhs: CGPoint, rhs: CGPoint) -> CGPoint {
     return CGPoint(x: lhs.x + rhs.x, y: lhs.y + rhs.y)
 }
 
-func convertToPoint(_ coordinate: Coordinate, in grid: Coordinate, unitSize: CGSize) -> CGPoint {
-    return CGPoint(
-        x: CGFloat(coordinate.x) * unitSize.width,
-        y: CGFloat(grid.y - coordinate.y - 1) * unitSize.height)
-}
-
 extension UIView {
+    func convertCoordinateToPoint(_ coordinate: Coordinate, unitSize: CGSize) -> CGPoint {
+        return CGPoint(
+            x: CGFloat(coordinate.x) * unitSize.width,
+            y: self.bounds.height - CGFloat( coordinate.y + 1) * unitSize.height
+        )
+    }
+
     func moveAnimationBlock(distance: CGFloat, angle: CGFloat) -> () -> Void {
         return { [weak self] in
             if self == nil { return }

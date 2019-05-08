@@ -30,13 +30,15 @@
                                     </imageView>
                                     <imageView clipsSubviews="YES" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="c1O-ie-gHn">
                                         <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="1000" id="5zJ-pQ-hCK"/>
+                                            <constraint firstAttribute="height" constant="1000" id="miB-mf-8CE"/>
+                                        </constraints>
                                     </imageView>
                                 </subviews>
                                 <constraints>
-                                    <constraint firstItem="c1O-ie-gHn" firstAttribute="trailing" secondItem="6YG-17-VGY" secondAttribute="trailing" id="9d5-jb-8jf"/>
                                     <constraint firstItem="6YG-17-VGY" firstAttribute="top" secondItem="IB8-S8-6SE" secondAttribute="top" id="Nba-Cx-M0H"/>
                                     <constraint firstAttribute="trailing" secondItem="6YG-17-VGY" secondAttribute="trailing" id="OQD-Yq-ePb"/>
-                                    <constraint firstItem="c1O-ie-gHn" firstAttribute="top" secondItem="6YG-17-VGY" secondAttribute="top" id="Rt8-jW-vzV"/>
                                     <constraint firstItem="c1O-ie-gHn" firstAttribute="leading" secondItem="6YG-17-VGY" secondAttribute="leading" id="YVg-xG-6h1"/>
                                     <constraint firstAttribute="bottom" secondItem="6YG-17-VGY" secondAttribute="bottom" id="Z6C-wx-qGC"/>
                                     <constraint firstItem="c1O-ie-gHn" firstAttribute="bottom" secondItem="6YG-17-VGY" secondAttribute="bottom" id="vGN-jo-CIy"/>
@@ -159,6 +161,8 @@ Position:</string>
                     <connections>
                         <outlet property="controlsView" destination="yRL-BO-b57" id="oS5-J1-uqG"/>
                         <outlet property="gridView" destination="c1O-ie-gHn" id="sLv-PB-jRb"/>
+                        <outlet property="gridViewHeight" destination="miB-mf-8CE" id="mjC-Mf-lvq"/>
+                        <outlet property="gridViewWidth" destination="5zJ-pQ-hCK" id="utj-8o-NDf"/>
                         <outlet property="groundView" destination="6YG-17-VGY" id="MW4-ny-LHV"/>
                         <outlet property="groundViewHeight" destination="L5k-ki-pkY" id="yCP-AK-hSC"/>
                         <outlet property="groundViewWidth" destination="VnQ-6h-BV1" id="ADE-hL-E3r"/>

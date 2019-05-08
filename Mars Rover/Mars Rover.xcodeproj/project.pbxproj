@@ -99,8 +99,6 @@
 		A4789C39227EC35D00614637 /* Mars Rover */ = {
 			isa = PBXGroup;
 			children = (
-				A484E93E22803E6900FBC66A /* Controller */,
-				A4789C5A227EC3C500614637 /* Model */,
 				A4789C3A227EC35D00614637 /* AppDelegate.swift */,
 				A4789C3E227EC35D00614637 /* Main.storyboard */,
 				A4789C41227EC35D00614637 /* Assets.xcassets */,
@@ -108,6 +106,8 @@
 				A4789C46227EC35D00614637 /* Info.plist */,
 				A46445792282B99100662547 /* RoverView.swift */,
 				A46445772282548A00662547 /* UIHelper.swift */,
+				A484E93E22803E6900FBC66A /* Controller */,
+				A4789C5A227EC3C500614637 /* Model */,
 			);
 			path = "Mars Rover";
 			sourceTree = "<group>";

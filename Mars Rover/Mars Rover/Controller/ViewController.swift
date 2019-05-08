@@ -21,21 +21,33 @@ class ViewController: UIViewController {
             for v in roverViews.values {
                 v.removeFromSuperview()
             }
-
-            groundViewWidth.constant = max(CGFloat(site.grid.x + 1) * gridSize, view.bounds.width)
-            groundViewHeight.constant = max(CGFloat(site.grid.y + 1) * gridSize, view.bounds.height)
             
-            if let rover = site.rovers.first {
-                centreScrollView(for: rover)
-            } else {
-                let yOffset = max(0, (groundViewHeight.constant - scrollView.bounds.height))
-                scrollView.setContentOffset(CGPoint(x: 0, y: yOffset), animated: true)
-            }
+            let minGroundSize = CGSize(
+                width: ceil(view.bounds.width / gridSize) * gridSize,
+                height: ceil(view.bounds.height / gridSize) * gridSize
+            )
+            
+            let gridViewSize = CGSize(
+                width: CGFloat(site.grid.x + 1) * gridSize,
+                height: CGFloat(site.grid.y + 1) * gridSize
+            )
+            
+            gridViewWidth.constant = gridViewSize.width
+            gridViewHeight.constant = gridViewSize.height
+
+            groundViewWidth.constant = max(gridViewSize.width, minGroundSize.width)
+            groundViewHeight.constant = max(gridViewSize.height, minGroundSize.height)
+            
+            selectedRover = site.rovers.first
         }
     }
     
     var selectedRover: Rover? {
         didSet {
+            if oldValue == selectedRover {
+                return
+            }
+            
             updateStatus(for: selectedRover)
             
             for rover in site.rovers {
@@ -58,6 +70,8 @@ class ViewController: UIViewController {
     @IBOutlet weak var groundViewHeight: NSLayoutConstraint!
     @IBOutlet weak var gridView: UIImageView!
     
+    @IBOutlet weak var gridViewWidth: NSLayoutConstraint!
+    @IBOutlet weak var gridViewHeight: NSLayoutConstraint!
     @IBOutlet weak var controlsView: UIView!
    
     @IBAction func addButtonTapped(_ sender: Any) {
@@ -253,6 +267,8 @@ class ViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        
+        centreScrollView(for: selectedRover)
     }
 
     override func didReceiveMemoryWarning() {
@@ -280,18 +296,20 @@ class ViewController: UIViewController {
         """
     }
     
-    func centreScrollView(for rover: Rover) {
-        guard let roverView = roverViews[rover] else {
-            return
+    func centreScrollView(for rover: Rover?, animated: Bool = true) {
+        var xOffset: CGFloat = 0
+        var yOffset: CGFloat = 0
+        
+        if let rover = rover, let roverView = roverViews[rover] {
+            xOffset = min(groundViewWidth.constant - scrollView.bounds.width,
+                          max(0, roverView.center.x - scrollView.bounds.width / 2))
+            yOffset = min(groundViewHeight.constant - scrollView.bounds.height,
+                          max(0, roverView.center.y - scrollView.bounds.height / 2))
+        } else {
+            yOffset = max(0, (groundViewHeight.constant - scrollView.bounds.height))
         }
         
-        let xOffset = min(groundViewWidth.constant - scrollView.bounds.width,
-                          max(0, roverView.center.x - scrollView.bounds.width / 2))
-        
-        let yOffset = min(groundViewHeight.constant - scrollView.bounds.height,
-                          max(0, roverView.center.y - scrollView.bounds.height / 2))
-        
-        scrollView.setContentOffset(CGPoint(x: xOffset, y: yOffset), animated: true)
+        scrollView.setContentOffset(CGPoint(x: xOffset, y: yOffset), animated: animated)
     }
     
     func addRover(_ rover: Rover) {
@@ -308,7 +326,7 @@ class ViewController: UIViewController {
     func createViewForRover(_ rover: Rover) -> RoverView {
         let unitSize = CGSize(width: gridSize, height: gridSize)
         let position = rover.initialPosition
-        let point = convertToPoint(position.coordinate, in: site.grid, unitSize: unitSize)
+        let point = gridView.convertCoordinateToPoint(position.coordinate, unitSize: unitSize)
         
         let view = RoverView(rover: rover)
         view.frame = CGRect(origin: point, size: unitSize)
