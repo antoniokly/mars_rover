@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		A46445782282548A00662547 /* UIHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A46445772282548A00662547 /* UIHelper.swift */; };
 		A464457A2282B99100662547 /* RoverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A46445792282B99100662547 /* RoverView.swift */; };
+		A464457C2282C3EF00662547 /* CommandHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A464457B2282C3EF00662547 /* CommandHelper.swift */; };
 		A4789C3B227EC35D00614637 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4789C3A227EC35D00614637 /* AppDelegate.swift */; };
 		A4789C3D227EC35D00614637 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4789C3C227EC35D00614637 /* ViewController.swift */; };
 		A4789C40227EC35D00614637 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A4789C3E227EC35D00614637 /* Main.storyboard */; };
@@ -37,6 +38,7 @@
 /* Begin PBXFileReference section */
 		A46445772282548A00662547 /* UIHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIHelper.swift; sourceTree = "<group>"; };
 		A46445792282B99100662547 /* RoverView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoverView.swift; sourceTree = "<group>"; };
+		A464457B2282C3EF00662547 /* CommandHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommandHelper.swift; sourceTree = "<group>"; };
 		A4789C37227EC35D00614637 /* Mars Rover.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Mars Rover.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A4789C3A227EC35D00614637 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A4789C3C227EC35D00614637 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -103,6 +105,7 @@
 				A4789C43227EC35D00614637 /* LaunchScreen.storyboard */,
 				A4789C46227EC35D00614637 /* Info.plist */,
 				A46445792282B99100662547 /* RoverView.swift */,
+				A46445772282548A00662547 /* UIHelper.swift */,
 			);
 			path = "Mars Rover";
 			sourceTree = "<group>";
@@ -125,6 +128,7 @@
 				A4789C61227EC44600614637 /* Heading.swift */,
 				A4789C63227EC53600614637 /* Action.swift */,
 				A4789C65227EDD0D00614637 /* Site.swift */,
+				A464457B2282C3EF00662547 /* CommandHelper.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -134,7 +138,6 @@
 			children = (
 				A4789C3C227EC35D00614637 /* ViewController.swift */,
 				A484E93C228039A500FBC66A /* AddRoverViewController.swift */,
-				A46445772282548A00662547 /* UIHelper.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -250,6 +253,7 @@
 				A4789C5E227EC3F200614637 /* Position.swift in Sources */,
 				A4789C64227EC53600614637 /* Action.swift in Sources */,
 				A4789C5C227EC3DF00614637 /* Rover.swift in Sources */,
+				A464457C2282C3EF00662547 /* CommandHelper.swift in Sources */,
 				A484E93D228039A500FBC66A /* AddRoverViewController.swift in Sources */,
 				A4789C60227EC40300614637 /* Coordinate.swift in Sources */,
 			);

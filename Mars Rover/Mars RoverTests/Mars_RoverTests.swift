@@ -215,4 +215,47 @@ class Mars_RoverTests: XCTestCase {
         XCTAssertEqual(rover1.finalPosition.string, "1 3 N")
         XCTAssertEqual(rover2.finalPosition.string, "5 1 E")
     }
+    
+    func testResolveMultiLineCommand() {
+        let command = """
+15 50
+1 2 N
+LMLMLMLMM
+3 3 E
+MMRMMRMRRM
+"""
+        guard let site = CommandHelper.resolveMultiLineCommand(command) else {
+            XCTFail("Invalid command")
+            return
+        }
+        
+        
+        XCTAssertEqual(site.grid.x, 15)
+        XCTAssertEqual(site.grid.y, 50)
+        XCTAssertEqual(site.rovers.count, 2)
+        
+        XCTAssertEqual(site.rovers[0].initialPosition.coordinate.x, 1)
+        XCTAssertEqual(site.rovers[0].initialPosition.coordinate.y, 2)
+        XCTAssertEqual(site.rovers[0].initialPosition.heading, Heading.N)
+        
+        XCTAssertEqual(site.rovers[1].initialPosition.coordinate.x, 3)
+        XCTAssertEqual(site.rovers[1].initialPosition.coordinate.y, 3)
+        XCTAssertEqual(site.rovers[1].initialPosition.heading, Heading.E)
+        
+        //assert output
+        XCTAssertEqual(site.rovers[0].finalPosition.string, "1 3 N")
+        XCTAssertEqual(site.rovers[1].finalPosition.string, "5 1 E")
+    }
+    
+    func testInvalidMultiLineCommand() {
+        let command = """
+X 5
+X 2 N
+LMLMLMLMM
+3 X E
+MMRMMRMRRM
+"""
+        let site = CommandHelper.resolveMultiLineCommand(command)
+        XCTAssertNil(site)
+    }
 }

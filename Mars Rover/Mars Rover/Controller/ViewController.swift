@@ -168,7 +168,7 @@ class ViewController: UIViewController {
         
         let animation = animationQueue.removeFirst()
         
-        UIView.animate(withDuration: 0.5,
+        UIView.animate(withDuration: 0.2,
                        delay: 0,
                        options: [.beginFromCurrentState, .curveLinear],
                        animations: animation,
