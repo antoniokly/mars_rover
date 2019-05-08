@@ -7,10 +7,9 @@
 
 import UIKit
 
-let gridSize: CGFloat = 42
+let gridSize: CGFloat = 84
 
 class ViewController: UIViewController {
-    
     
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var groundView: UIImageView!
@@ -40,7 +39,16 @@ class ViewController: UIViewController {
                        delay: 0,
                        options: [],
                        animations: animation,
-                       completion: { _ in self.updateStatus(for: rover) })
+                       completion: { _ in
+                        self.updateStatus(for: rover)
+                        
+                        let visible = CGRect(origin: self.scrollView.frame.origin + self.scrollView.contentOffset, size: self.scrollView.frame.size)
+                        
+                        if !visible.intersects(roverView.frame) {
+                            self.centreScrollView(for: rover)
+                        }
+                        
+        })
     }
     
     @IBAction func leftButtonTapped(_ sender: Any) {
@@ -78,8 +86,14 @@ class ViewController: UIViewController {
     @IBAction func resetButtonTapped(_ sender: Any) {
         for rover in site.rovers {
             rover.actions.removeAll()
+            
+            roverViews[rover]?.removeFromSuperview()
+            let view = createViewForRover(rover)
+            roverViews[rover] = view
+            gridView.addSubview(view)
         }
-        statusLabel.text = nil
+        
+        selectedRover = site.rovers.first
     }
     
     @IBAction func undoButtonTapped(_ sender: Any) {
@@ -90,8 +104,6 @@ class ViewController: UIViewController {
         if rover.actions.count != 0 {
             rover.actions.removeLast()
         }
-        
-        
         
         updateStatus(for: rover)
     }
@@ -115,10 +127,18 @@ class ViewController: UIViewController {
                 switch action {
                 case .moveForward:
                     return { [weak self] in
+                        guard self != nil else {return}
+                        
                         let angle = CGFloat(position.heading.angle)
                         position = action.transform(position)
                         view.moveAnimationBlock(distance: gridSize, angle: angle)()
-                        self?.updateStatus(for: rover, at: position)
+                        self!.updateStatus(for: rover, at: position)
+
+                        let visible = CGRect(origin: self!.scrollView.frame.origin + self!.scrollView.contentOffset, size: self!.scrollView.frame.size)
+                        
+                        if !visible.intersects(view.frame) {
+                            self!.centreScrollView(for: rover)
+                        }
                     }
                 case .spinLeft:
                     return { [weak self] in
@@ -168,10 +188,7 @@ class ViewController: UIViewController {
         }
     }
     
-    var roverViews: [Rover: RoverView] = [:]
-    
-//    var roverAnimations: [Rover: [() -> Void]] = [:]
-    
+    var roverViews: [Rover: UIView] = [:]
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
@@ -179,13 +196,14 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        scrollView.backgroundColor = UIColor(patternImage: #imageLiteral(resourceName: "Mars"))
         groundView.backgroundColor = UIColor(patternImage: #imageLiteral(resourceName: "Mars"))
         gridView.backgroundColor = UIColor(patternImage: UIImage(imageLiteralResourceName: "grid-42"))
         
+        let siteSize = Int(ceil(max(view.bounds.width, view.bounds.height) / gridSize))
+        
         site = Site(name: "Mars",
-                    grid: Coordinate(
-                        x: Int(ceil(view.bounds.width / gridSize)),
-                        y: Int(ceil(view.bounds.height / gridSize))),
+                    grid: Coordinate(x: siteSize, y: siteSize),
                     rovers: [])
         
         groundViewWidth.constant = CGFloat(site.grid.x) * gridSize
@@ -200,7 +218,6 @@ class ViewController: UIViewController {
         let yOffset = max(0, (groundViewHeight.constant - scrollView.bounds.height))
         
         scrollView.setContentOffset(CGPoint(x: 0, y: yOffset), animated: true)
-        
     }
 
     override func didReceiveMemoryWarning() {
@@ -226,6 +243,20 @@ class ViewController: UIViewController {
         """
     }
     
+    func centreScrollView(for rover: Rover) {
+        guard let roverView = roverViews[rover] else {
+            return
+        }
+        
+        let xOffset = min(groundViewWidth.constant - scrollView.bounds.width,
+                          max(0, roverView.center.x - scrollView.bounds.width / 2))
+        
+        let yOffset = min(groundViewHeight.constant - scrollView.bounds.height,
+                          max(0, roverView.center.y - scrollView.bounds.height / 2))
+        
+        scrollView.setContentOffset(CGPoint(x: xOffset, y: yOffset), animated: true)
+    }
+    
     func addRover(_ rover: Rover) {
         site.rovers.append(rover)
         selectedRover = rover
@@ -233,9 +264,11 @@ class ViewController: UIViewController {
         let view = createViewForRover(rover)
         roverViews[rover] = view
         gridView.addSubview(view)
+        
+        centreScrollView(for: rover)
     }
     
-    func createViewForRover(_ rover: Rover) -> RoverView {
+    func createViewForRover(_ rover: Rover) -> UIView {
         let unitSize = CGSize(width: gridSize, height: gridSize)
         let position = rover.initialPosition
         let point = convertToPoint(position.coordinate, in: site.grid, unitSize: unitSize)
@@ -244,7 +277,15 @@ class ViewController: UIViewController {
         view.frame = CGRect(origin: point, size: unitSize)
         view.rotateAnimationBlock(angle: CGFloat(position.heading.angle))()
 
+        let tap = UITapGestureRecognizer(target: self, action: #selector(handleTap(_:)))
+        view.addGestureRecognizer(tap)
+        view.isUserInteractionEnabled = true
+
         return view
+    }
+    
+    @objc func handleTap(_ sender: UITapGestureRecognizer) {
+        selectedRover = (sender.view as? RoverView)?.rover
     }
 }
 

@@ -18,4 +18,20 @@ func convertToPoint(_ coordinate: Coordinate, in grid: Coordinate, unitSize: CGS
         y: CGFloat(grid.y - coordinate.y - 1) * unitSize.height)
 }
 
-
+extension UIView {
+    func moveAnimationBlock(distance: CGFloat, angle: CGFloat) -> () -> Void {
+        return { [weak self] in
+            if self == nil { return }
+            self!.center = self!.center.applying(
+                CGAffineTransform(translationX: distance * cos(-angle),
+                                  y: distance * sin(-angle)))
+        }
+    }
+    
+    func rotateAnimationBlock(angle: CGFloat) -> () -> Void {
+        return { [weak self] in
+            if self == nil { return }
+            self!.transform = self!.transform.concatenating(CGAffineTransform(rotationAngle: -angle))
+        }
+    }
+}
