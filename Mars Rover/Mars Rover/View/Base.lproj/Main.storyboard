@@ -92,7 +92,7 @@ Position:</string>
                                             </userDefinedRuntimeAttribute>
                                         </userDefinedRuntimeAttributes>
                                         <connections>
-                                            <action selector="undoButtonTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="mHa-oh-yUB"/>
+                                            <action selector="editButtonTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="mHa-oh-yUB"/>
                                             <segue destination="1d2-Z3-oEf" kind="presentation" modalPresentationStyle="overFullScreen" modalTransitionStyle="coverVertical" id="gmt-tC-R6O"/>
                                         </connections>
                                     </button>

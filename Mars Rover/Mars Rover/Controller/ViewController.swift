@@ -79,14 +79,24 @@ class ViewController: UIViewController {
         
         let angle = CGFloat(rover.finalPosition.heading.angle)
         
-        rover.actions.append(.moveForward)
+        do {
+            try rover.addAction(.moveForward)
+        } catch {
+            let alert = UIAlertController(title: nil, message: "Rover has reached its bound.", preferredStyle: .actionSheet)
+            
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            
+            present(alert, animated: true)
+            
+            return
+        }
         
         let animation = roverView.moveAnimationBlock(distance: gridSize,
                                                      angle: angle)
         
         UIView.animate(withDuration: 0.5,
                        delay: 0,
-                       options: [],
+                       options: [.curveEaseInOut],
                        animations: animation,
                        completion: { _ in
                         self.updateStatus(for: rover)
@@ -104,13 +114,13 @@ class ViewController: UIViewController {
             return
         }
         
-        rover.actions.append(.spinLeft)
+        try? rover.addAction(.spinLeft)
         
         let animation = roverView.rotateAnimationBlock(angle: CGFloat.pi / 2)
         
         UIView.animate(withDuration: 0.5,
                        delay: 0,
-                       options: [],
+                       options: [.curveEaseInOut],
                        animations: animation,
                        completion: { _ in
                         self.updateStatus(for: rover)
@@ -122,13 +132,13 @@ class ViewController: UIViewController {
             return
         }
         
-        rover.actions.append(.spinRight)
+        try? rover.addAction(.spinRight)
         
         let animation = roverView.rotateAnimationBlock(angle: -CGFloat.pi / 2)
         
         UIView.animate(withDuration: 0.5,
                        delay: 0,
-                       options: [],
+                       options: [.curveEaseInOut],
                        animations: animation,
                        completion: { _ in
                         self.updateStatus(for: rover)
@@ -146,22 +156,13 @@ class ViewController: UIViewController {
             self.reset()
         }))
         
-        alert.addAction(UIAlertAction(title: "Cancel", style: .default, handler: { (action) in
-        }))
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
 
         present(alert, animated: true)
     }
     
-    @IBAction func undoButtonTapped(_ sender: Any) {
-        guard let rover = selectedRover else {
-            return
-        }
-        
-        if rover.actions.count != 0 {
-            rover.actions.removeLast()
-        }
-        
-        updateStatus(for: rover)
+    @IBAction func editButtonTapped(_ sender: Any) {
+       
     }
     
     @IBAction func replayButtonTapped(_ sender: Any) {
@@ -170,7 +171,7 @@ class ViewController: UIViewController {
     
     func reset() {
         for rover in site.rovers {
-            rover.actions.removeAll()
+            rover.removeAllActions()
             roverViews[rover]?.removeFromSuperview()
             
             let roverView = createViewForRover(rover)
@@ -335,7 +336,7 @@ class ViewController: UIViewController {
     }
     
     func addRover(_ rover: Rover) {
-        site.rovers.append(rover)
+        site.addRover(rover)
         
         let roverView = createViewForRover(rover)
         roverViews[rover] = roverView

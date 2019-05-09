@@ -10,9 +10,11 @@ import Foundation
 let gridPattern = #"^(\d+)\h(\d+)"#
 let roverPattern = #"(\d+)\h(\d+)\h((N|E|S|W))\n((M|L|R)*)"#
 
+let commandErrorDomain = "commandErrorDomain"
+
 class CommandHelper {
     
-    static func resolveMultiLineCommand(_ command: String) -> Site? {
+    static func resolveMultiLineCommand(_ command: String) throws -> Site? {
         
         //site
         guard let regex = try? NSRegularExpression(pattern: gridPattern),
@@ -48,11 +50,16 @@ class CommandHelper {
             
             let rover = Rover(name: "Rover \(site.rovers.count + 1)", position: position)
             
-            rover.commandString = r[3]
+            rover.bound = site.grid
             
-            site.rovers.append(rover)
+            try rover.setCommandString(r[3])
+            
+            site.addRover(rover)
         }
         
         return site
     }
 }
+
+
+

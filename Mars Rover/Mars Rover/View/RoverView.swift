@@ -41,7 +41,7 @@ class RoverView: UIImageView {
     func startFlashing() {
         let animation = CABasicAnimation(keyPath: "opacity")
         animation.fromValue = 0
-        animation.toValue = 0.5
+        animation.toValue = 0.9
         animation.duration = 1
         animation.autoreverses = true
         animation.repeatCount = .infinity

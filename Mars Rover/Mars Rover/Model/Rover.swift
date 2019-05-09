@@ -10,7 +10,7 @@ import Foundation
 class Rover {
     private (set) var initialPosition: Position
     var name: String
-    var actions: [Action] = []
+    private (set) var actions: [Action] = []
     var bound: Coordinate?
     
     init(name: String, position: Position) {
@@ -23,33 +23,53 @@ class Rover {
     }
     
     var commandString: String {
-        get {
-            return actions.commandString
+        return actions.commandString
+    }
+    
+    func setCommandString(_ command: String) throws {
+        guard var newActions: [Action] = Array(commandString: command) else {
+            return
         }
-        set {
-            guard var newActions: [Action] = Array(commandString: newValue) else {
-                return
-            }
+        
+        if let limit = bound {
+            NSLog("Validating site boundary: %@", limit.string)
             
-            if let limit = bound {
-                NSLog("Validating site boundary: %@", limit.string)
+            var newPosition = initialPosition
+            for i in 0 ..< newActions.count {
+                let action = newActions[i]
+                newPosition = newActions[i].transform(newPosition)
                 
-                var newPosition = initialPosition
-                for i in 0 ..< newActions.count {
-                    let action = newActions[i]
-                    newPosition = newActions[i].transform(newPosition)
+                if newPosition.coordinate.isOutside(upper: limit, lower: .origin) {
+                    NSLog("Out of bound (%@) after step %d (%@). Warning: Command is truncated.", newPosition.string, i, action.command)
                     
-                    if newPosition.coordinate.x > limit.x || newPosition.coordinate.y > limit.y || newPosition.coordinate.x < 0 || newPosition.coordinate.y < 0 {
-                        NSLog("Out of bound (%@) after step %d (%@). Warning: Command is truncated.", newPosition.string, i, action.command)
-                        
-                        newActions = Array(newActions.prefix(upTo: i))
-                        break
-                    }
+                    newActions = Array(newActions.prefix(upTo: i))
+                    
+                    throw NSError(domain: commandErrorDomain,
+                                  code: -1,
+                                  userInfo: nil)
                 }
             }
-
-            self.actions = newActions
         }
+        
+        self.actions = newActions
+    }
+    
+    func addAction(_ action: Action) throws {
+        if action == .moveForward, let limit = bound  {
+            let positionAfter = action.transform(finalPosition)
+            
+            if positionAfter.coordinate.isOutside(upper: limit, lower: .origin) {
+                throw NSError(domain: commandErrorDomain,
+                              code: -1,
+                              userInfo: nil)
+            }
+        }
+        
+        actions.append(action)
+    }
+    
+    func removeAllActions() {
+        actions.removeAll()
     }
 }
 

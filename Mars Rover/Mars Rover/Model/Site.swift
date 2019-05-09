@@ -10,7 +10,7 @@ import Foundation
 class Site {
     var name: String
     var grid: Coordinate
-    var rovers: [Rover]
+    private (set) var rovers: [Rover]
     
     var commandString: String {
         var strings = [ grid.string ]
@@ -29,5 +29,10 @@ class Site {
         for rover in self.rovers {
             rover.bound = grid
         }
+    }
+    
+    func addRover(_ rover: Rover) {
+        rovers.append(rover)
+        rover.bound = grid
     }
 }

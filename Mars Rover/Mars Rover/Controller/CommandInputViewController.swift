@@ -24,14 +24,22 @@ class CommandInputViewController: UIViewController {
             return
         }
         
-        if let site = CommandHelper.resolveMultiLineCommand(command) {
-            self.mainVC.site = site
-         
-            dismiss(animated: true) {
-                self.mainVC.replay()
+        do {
+            if let site = try CommandHelper.resolveMultiLineCommand(command) {
+                self.mainVC.site = site
+                
+                dismiss(animated: true) {
+                    self.mainVC.replay()
+                }
             }
-        } else {
-            //TODO: error
+        }catch {
+            let alert = UIAlertController(title: nil, message: "Command error, please retry.", preferredStyle: .actionSheet)
+            
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { action in
+                self.inputTextView.becomeFirstResponder()
+            }))
+            
+            present(alert, animated: true)
         }
     }
     
