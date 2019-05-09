@@ -386,12 +386,6 @@ Position:</string>
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Command:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cPx-kA-vFZ">
-                                            <rect key="frame" x="25.000000000000007" y="92" width="83.666666666666686" height="21"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                            <nil key="textColor"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Nex-3S-xOT">
                                             <rect key="frame" x="311" y="44" width="48" height="33"/>
                                             <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
@@ -401,10 +395,10 @@ Position:</string>
                                             </connections>
                                         </button>
                                         <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="Nty-GV-Igz">
-                                            <rect key="frame" x="25" y="121" width="325" height="128"/>
+                                            <rect key="frame" x="25" y="85" width="325" height="160"/>
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <constraints>
-                                                <constraint firstAttribute="height" constant="128" id="iNj-Ab-ekL"/>
+                                                <constraint firstAttribute="height" constant="160" id="iNj-Ab-ekL"/>
                                             </constraints>
                                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                             <textInputTraits key="textInputTraits" autocapitalizationType="allCharacters"/>
@@ -419,13 +413,30 @@ Position:</string>
                                                 <action selector="cancelButtonTapped:" destination="1d2-Z3-oEf" eventType="touchUpInside" id="brI-Zg-0iM"/>
                                             </connections>
                                         </button>
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" hasAttributedTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Eoi-TP-CVm">
+                                            <rect key="frame" x="147" y="253" width="81" height="30"/>
+                                            <state key="normal">
+                                                <attributedString key="attributedTitle">
+                                                    <fragment content="Instructions">
+                                                        <attributes>
+                                                            <color key="NSColor" red="0.26051741839999998" green="0.2605243921" blue="0.260520637" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                            <font key="NSFont" size="15" name=".AppleSystemUIFont"/>
+                                                            <integer key="NSUnderline" value="1"/>
+                                                        </attributes>
+                                                    </fragment>
+                                                </attributedString>
+                                            </state>
+                                            <connections>
+                                                <action selector="instructionsButtonTapped:" destination="1d2-Z3-oEf" eventType="touchUpInside" id="doU-mq-mKS"/>
+                                            </connections>
+                                        </button>
                                     </subviews>
                                     <constraints>
-                                        <constraint firstItem="cPx-kA-vFZ" firstAttribute="leading" secondItem="Nty-GV-Igz" secondAttribute="leading" id="6t2-MW-fd5"/>
-                                        <constraint firstItem="Nty-GV-Igz" firstAttribute="top" secondItem="cPx-kA-vFZ" secondAttribute="bottom" constant="8" id="XKr-4T-tXh"/>
+                                        <constraint firstItem="Eoi-TP-CVm" firstAttribute="top" secondItem="Nty-GV-Igz" secondAttribute="bottom" constant="8" symbolic="YES" id="G4J-TS-DU2"/>
+                                        <constraint firstItem="Nty-GV-Igz" firstAttribute="top" secondItem="5gS-4u-y0O" secondAttribute="bottom" constant="8" symbolic="YES" id="eTT-f2-HbE"/>
+                                        <constraint firstItem="Eoi-TP-CVm" firstAttribute="centerX" secondItem="Nty-GV-Igz" secondAttribute="centerX" id="h3y-IQ-552"/>
                                         <constraint firstItem="Nty-GV-Igz" firstAttribute="leading" secondItem="Zn5-ka-hCN" secondAttribute="leading" constant="25" id="kOo-Hp-eD3"/>
                                         <constraint firstItem="Nty-GV-Igz" firstAttribute="centerX" secondItem="Zn5-ka-hCN" secondAttribute="centerX" id="mdp-xH-NiS"/>
-                                        <constraint firstItem="Nty-GV-Igz" firstAttribute="top" secondItem="Zn5-ka-hCN" secondAttribute="top" constant="121" id="tEZ-D3-YD6"/>
                                     </constraints>
                                 </view>
                                 <blurEffect style="light"/>
@@ -449,7 +460,7 @@ Position:</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="zbq-By-3iu" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1094" y="882"/>
+            <point key="canvasLocation" x="1093.5999999999999" y="881.5270935960591"/>
         </scene>
     </scenes>
 </document>
