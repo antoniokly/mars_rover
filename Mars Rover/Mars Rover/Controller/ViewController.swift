@@ -56,7 +56,7 @@ class ViewController: UIViewController {
     
     var roverViews: [Rover: RoverView] = [:]
     
-    var pendingReplay: Bool = false
+    var restored: Bool = false
     
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var groundView: UIImageView!
@@ -285,7 +285,7 @@ class ViewController: UIViewController {
             do {
                 if let site = try CommandHelper.resolveMultiLineCommand(command) {
                     self.site = site
-                    pendingReplay = true
+                    restored = true
                 }
             } catch {
                 UserDefaults.standard.removeObject(forKey: "command")
@@ -304,11 +304,16 @@ class ViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        if pendingReplay {
-            replay()
-        } else {
-            centreScrollView(for: selectedRover)
+        if restored {
+            for rover in site.rovers {
+                let roverView = createViewForRover(rover, atFinalposition: true)
+                roverViews[rover] = roverView
+                gridView.addSubview(roverView)
+            }
+            selectedRover = site.rovers.last
         }
+        
+        centreScrollView(for: selectedRover)
     }
 
     override func didReceiveMemoryWarning() {
@@ -336,7 +341,7 @@ class ViewController: UIViewController {
         """
     }
     
-    func setupView(for rover: Rover) {
+    func setupView(for rover: Rover, atFinalposition: Bool = false ) {
         let roverView = createViewForRover(rover)
         roverViews[rover] = roverView
         gridView.addSubview(roverView)
@@ -361,9 +366,9 @@ class ViewController: UIViewController {
         scrollView.setContentOffset(CGPoint(x: xOffset, y: yOffset), animated: animated)
     }
     
-    func createViewForRover(_ rover: Rover) -> RoverView {
+    func createViewForRover(_ rover: Rover, atFinalposition: Bool = false ) -> RoverView {
         let unitSize = CGSize(width: gridSize, height: gridSize)
-        let position = rover.initialPosition
+        let position = atFinalposition ? rover.finalPosition : rover.initialPosition
         let point = gridView.convertCoordinateToPoint(position.coordinate, unitSize: unitSize)
         
         let view = RoverView(rover: rover)
