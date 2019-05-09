@@ -17,10 +17,9 @@ class CommandHelper {
     static func resolveMultiLineCommand(_ command: String) throws -> Site? {
         
         //site
-        guard let regex = try? NSRegularExpression(pattern: gridPattern),
-            let match = regex.firstMatch(in: command,
-                                           range: NSRange(command.startIndex..., in: command)) else {
-                                            return nil
+        let regex = try NSRegularExpression(pattern: gridPattern)
+        guard let match = regex.firstMatch(in: command, range: NSRange(command.startIndex..., in: command)) else {
+            return nil
         }
         
         
@@ -32,29 +31,24 @@ class CommandHelper {
         
         
         //Rovers
-        guard let regex1 = try? NSRegularExpression(pattern: roverPattern) else {
-            return site
-        }
+        let regex1 = try NSRegularExpression(pattern: roverPattern)
         
-        let roversMatch = regex1.matches(in: command,
-                                         range: NSRange(command.startIndex..., in: command))
+        let roversMatch = regex1.matches(in: command, range: NSRange(command.startIndex..., in: command))
         
         for match in roversMatch {
             let r = String(command[Range(match.range, in: command)!]).components(separatedBy: [" ", "\n"])
             
-            guard let x = Int(r[0]), let y = Int(r[1]), let h = Heading(rawValue: r[2]) else {
-                continue
+            if let x = Int(r[0]), let y = Int(r[1]), let h = Heading(rawValue: r[2])  {
+                let position = Position(coordinate: Coordinate(x: x, y: y), heading: h)
+                
+                let rover = Rover(name: "Rover \(site.rovers.count + 1)", position: position)
+                
+                rover.bound = site.grid
+                
+                try rover.setCommandString(r[3], avoids: site.rovers.map({$0.finalPosition.coordinate}))
+                
+                try site.addRover(rover)
             }
-            
-            let position = Position(coordinate: Coordinate(x: x, y: y), heading: h)
-            
-            let rover = Rover(name: "Rover \(site.rovers.count + 1)", position: position)
-            
-            rover.bound = site.grid
-            
-            try rover.setCommandString(r[3], avoids: site.rovers.map({$0.finalPosition.coordinate}))
-            
-            site.addRover(rover)
         }
         
         return site

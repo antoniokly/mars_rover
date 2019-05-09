@@ -238,6 +238,20 @@ class Mars_RoverTests: XCTestCase {
         XCTAssertEqual(rover2.finalPosition.string, "0 1 N")
     }
     
+    func testAddRoverError() {
+        let rover1 = Rover(name: "Rover 1", position: Position(coordinate: Coordinate(x: 0, y: 1), heading: .W))
+        let rover2 = Rover(name: "Rover 2", position: Position(coordinate: Coordinate(x: 0, y: 1), heading: .N))
+        let site = Site(name: "A Plateau", grid: Coordinate(x: 5, y: 5), rovers: [rover1])
+        
+        XCTAssertEqual(site.rovers.count, 1)
+        do {
+            try site.addRover(rover2)
+        } catch let error as NSError {
+            XCTAssertEqual(error.message, "There is already a rover at 0 1")
+        }
+        XCTAssertEqual(site.rovers.count, 1)
+    }
+    
     func testExample() {
         let rover1 = Rover(name: "Rover 1", position: Position(coordinate: Coordinate(x: 1, y: 2), heading: .N))
         let rover2 = Rover(name: "Rover 2", position: Position(coordinate: Coordinate(x: 3, y: 3), heading: .E))

@@ -25,8 +25,18 @@ class AddRoverViewController: UIViewController {
         
         let newRover = Rover(name: name, position: Position(coordinate: Coordinate(x: x, y: y), heading: heading))
         
-        dismiss(animated: true) {
-            self.mainVC.addRover(newRover)
+        do {
+            try mainVC.site.addRover(newRover)
+            
+            dismiss(animated: true) {
+                self.mainVC.setupView(for: newRover)
+            }
+        } catch let error as NSError {
+            let alert = UIAlertController(title: nil, message: error.message ?? "Command error, please retry.", preferredStyle: .actionSheet)
+            
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            
+            present(alert, animated: true)
         }
     }
     

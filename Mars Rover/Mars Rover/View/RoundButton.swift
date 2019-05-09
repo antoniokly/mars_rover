@@ -25,6 +25,13 @@ class RoundButton: UIButton {
         }
     }
     
+    @IBInspectable
+    var mirrored: Bool = false {
+        didSet {
+            self.transform = CGAffineTransform(scaleX: mirrored ? -1 : 1, y: 1 )
+        }
+    }
+    
     override public func layoutSubviews() {
         super.layoutSubviews()
         layer.cornerRadius = 0.5 * bounds.size.width

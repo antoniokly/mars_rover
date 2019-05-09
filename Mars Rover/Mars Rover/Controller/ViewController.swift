@@ -319,6 +319,15 @@ class ViewController: UIViewController {
         """
     }
     
+    func setupView(for rover: Rover) {
+        let roverView = createViewForRover(rover)
+        roverViews[rover] = roverView
+        gridView.addSubview(roverView)
+        
+        selectedRover = rover
+        centreScrollView(for: rover)
+    }
+    
     func centreScrollView(for rover: Rover?, animated: Bool = true) {
         var xOffset: CGFloat = 0
         var yOffset: CGFloat = 0
@@ -333,17 +342,6 @@ class ViewController: UIViewController {
         }
         
         scrollView.setContentOffset(CGPoint(x: xOffset, y: yOffset), animated: animated)
-    }
-    
-    func addRover(_ rover: Rover) {
-        site.addRover(rover)
-        
-        let roverView = createViewForRover(rover)
-        roverViews[rover] = roverView
-        gridView.addSubview(roverView)
-        
-        selectedRover = rover
-        centreScrollView(for: rover)
     }
     
     func createViewForRover(_ rover: Rover) -> RoverView {
