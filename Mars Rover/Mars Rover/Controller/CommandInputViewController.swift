@@ -13,6 +13,7 @@ class CommandInputViewController: UIViewController {
     @IBOutlet weak var inputTextView: UITextView!
     
     @IBAction func cancelButtonTapped(_ sender: Any) {
+        inputTextView.resignFirstResponder()
         dismiss(animated: true)
     }
     

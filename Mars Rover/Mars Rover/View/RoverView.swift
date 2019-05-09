@@ -27,7 +27,7 @@ class RoverView: UIImageView {
         
         square = UIView(frame: CGRect(origin: .zero, size: CGSize(width: gridSize, height: gridSize)))
         
-        square.layer.borderColor = UIColor.red.cgColor
+        square.layer.borderColor = UIColor.lightBlue.cgColor
         square.layer.borderWidth = 3
         square.layer.opacity = 0
         

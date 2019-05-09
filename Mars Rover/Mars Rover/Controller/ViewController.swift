@@ -7,8 +7,6 @@
 
 import UIKit
 
-let gridSize: CGFloat = 84
-
 class ViewController: UIViewController {
     
     var animationQueue: [() -> Void] = []
@@ -39,6 +37,8 @@ class ViewController: UIViewController {
             groundViewHeight.constant = max(gridViewSize.height, minGroundSize.height)
             
             selectedRover = site.rovers.first
+            
+            
         }
     }
     
@@ -136,16 +136,20 @@ class ViewController: UIViewController {
     }
     
     @IBAction func resetButtonTapped(_ sender: Any) {
-        for rover in site.rovers {
-            rover.actions.removeAll()
-            
-            roverViews[rover]?.removeFromSuperview()
-            let view = createViewForRover(rover)
-            roverViews[rover] = view
-            gridView.addSubview(view)
+        if site.rovers.flatMap({$0.actions}).isEmpty {
+            return
         }
         
-        selectedRover = site.rovers.first
+        let alert = UIAlertController(title: nil, message: "Are you sure to reset all rovers to their initial positions?", preferredStyle: .actionSheet)
+        
+        alert.addAction(UIAlertAction(title: "Reset", style: .destructive, handler: { (action) in
+            self.reset()
+        }))
+        
+        alert.addAction(UIAlertAction(title: "Cancel", style: .default, handler: { (action) in
+        }))
+
+        present(alert, animated: true)
     }
     
     @IBAction func undoButtonTapped(_ sender: Any) {
@@ -164,8 +168,21 @@ class ViewController: UIViewController {
         replay()
     }
     
+    func reset() {
+        for rover in site.rovers {
+            rover.actions.removeAll()
+            roverViews[rover]?.removeFromSuperview()
+            
+            let roverView = createViewForRover(rover)
+            roverViews[rover] = roverView
+            gridView.addSubview(roverView)
+        }
+        
+        selectedRover = site.rovers.first
+    }
+    
     func disableControls() {
-        controlsView.alpha = 0
+        controlsView.alpha = 0.2
         controlsView.isUserInteractionEnabled = false
     }
     
@@ -184,10 +201,9 @@ class ViewController: UIViewController {
         }
         
         for rover in site.rovers {
-            let view = createViewForRover(rover)
-            roverViews[rover] = view
-            gridView.addSubview(view)
-            
+            let roverView = createViewForRover(rover)
+            roverViews[rover] = roverView
+            gridView.addSubview(roverView)
             
             var position = rover.initialPosition
             
@@ -201,12 +217,12 @@ class ViewController: UIViewController {
                         self!.selectedRover = rover
                         let angle = CGFloat(position.heading.angle)
                         position = action.transform(position)
-                        view.moveAnimationBlock(distance: gridSize, angle: angle)()
+                        roverView.moveAnimationBlock(distance: gridSize, angle: angle)()
                         self!.updateStatus(for: rover, at: position)
                         
                         let visible = CGRect(origin: self!.scrollView.frame.origin + self!.scrollView.contentOffset, size: self!.scrollView.frame.size)
                         
-                        if !visible.intersects(view.frame) {
+                        if !visible.intersects(roverView.frame) {
                             self!.centreScrollView(for: rover)
                         }
                     }
@@ -216,7 +232,7 @@ class ViewController: UIViewController {
                         
                         self!.selectedRover = rover
                         position = action.transform(position)
-                        view.rotateAnimationBlock(angle: CGFloat.pi / 2)()
+                        roverView.rotateAnimationBlock(angle: CGFloat.pi / 2)()
                         self!.updateStatus(for: rover, at: position)
                     }
                 case .spinRight:
@@ -225,7 +241,7 @@ class ViewController: UIViewController {
                         
                         self!.selectedRover = rover
                         position = action.transform(position)
-                        view.rotateAnimationBlock(angle: -CGFloat.pi / 2)()
+                        roverView.rotateAnimationBlock(angle: -CGFloat.pi / 2)()
                         self!.updateStatus(for: rover, at: position)
                     }
                 }
@@ -321,9 +337,9 @@ class ViewController: UIViewController {
     func addRover(_ rover: Rover) {
         site.rovers.append(rover)
         
-        let view = createViewForRover(rover)
-        roverViews[rover] = view
-        gridView.addSubview(view)
+        let roverView = createViewForRover(rover)
+        roverViews[rover] = roverView
+        gridView.addSubview(roverView)
         
         selectedRover = rover
         centreScrollView(for: rover)

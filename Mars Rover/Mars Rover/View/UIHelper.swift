@@ -8,6 +8,8 @@
 import Foundation
 import UIKit
 
+let gridSize: CGFloat = 84
+
 public func +(lhs: CGPoint, rhs: CGPoint) -> CGPoint {
     return CGPoint(x: lhs.x + rhs.x, y: lhs.y + rhs.y)
 }
@@ -35,4 +37,8 @@ extension UIView {
             self!.transform = self!.transform.concatenating(CGAffineTransform(rotationAngle: -angle))
         }
     }
+}
+
+extension UIColor {
+    static var lightBlue = UIColor(red: 52/255, green: 120/255, blue: 246/255, alpha: 1)
 }

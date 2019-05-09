@@ -24,6 +24,7 @@
 		A4789C64227EC53600614637 /* Action.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4789C63227EC53600614637 /* Action.swift */; };
 		A4789C66227EDD0D00614637 /* Site.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4789C65227EDD0D00614637 /* Site.swift */; };
 		A484E93D228039A500FBC66A /* AddRoverViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A484E93C228039A500FBC66A /* AddRoverViewController.swift */; };
+		A4E439912283C1E1000A42B6 /* RoundButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4E439902283C1E1000A42B6 /* RoundButton.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -58,6 +59,7 @@
 		A4789C63227EC53600614637 /* Action.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Action.swift; sourceTree = "<group>"; };
 		A4789C65227EDD0D00614637 /* Site.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Site.swift; sourceTree = "<group>"; };
 		A484E93C228039A500FBC66A /* AddRoverViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddRoverViewController.swift; sourceTree = "<group>"; };
+		A4E439902283C1E1000A42B6 /* RoundButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundButton.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -100,12 +102,9 @@
 			isa = PBXGroup;
 			children = (
 				A4789C3A227EC35D00614637 /* AppDelegate.swift */,
-				A4789C3E227EC35D00614637 /* Main.storyboard */,
 				A4789C41227EC35D00614637 /* Assets.xcassets */,
-				A4789C43227EC35D00614637 /* LaunchScreen.storyboard */,
 				A4789C46227EC35D00614637 /* Info.plist */,
-				A46445792282B99100662547 /* RoverView.swift */,
-				A46445772282548A00662547 /* UIHelper.swift */,
+				A4E4398F2283BEE5000A42B6 /* View */,
 				A484E93E22803E6900FBC66A /* Controller */,
 				A4789C5A227EC3C500614637 /* Model */,
 			);
@@ -143,6 +142,18 @@
 				A464457D2282FCC000662547 /* CommandInputViewController.swift */,
 			);
 			path = Controller;
+			sourceTree = "<group>";
+		};
+		A4E4398F2283BEE5000A42B6 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				A4789C3E227EC35D00614637 /* Main.storyboard */,
+				A4789C43227EC35D00614637 /* LaunchScreen.storyboard */,
+				A46445792282B99100662547 /* RoverView.swift */,
+				A46445772282548A00662547 /* UIHelper.swift */,
+				A4E439902283C1E1000A42B6 /* RoundButton.swift */,
+			);
+			path = View;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -249,6 +260,7 @@
 			files = (
 				A4789C62227EC44600614637 /* Heading.swift in Sources */,
 				A4789C3D227EC35D00614637 /* ViewController.swift in Sources */,
+				A4E439912283C1E1000A42B6 /* RoundButton.swift in Sources */,
 				A464457A2282B99100662547 /* RoverView.swift in Sources */,
 				A4789C66227EDD0D00614637 /* Site.swift in Sources */,
 				A46445782282548A00662547 /* UIHelper.swift in Sources */,

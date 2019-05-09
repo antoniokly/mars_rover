@@ -13,6 +13,8 @@ class AddRoverViewController: UIViewController {
     @IBOutlet weak var positionPicker: UIPickerView!
     
     @IBAction func donButtonTapped(_ sender: Any) {
+        nameTextField.resignFirstResponder()
+        
         guard let name = nameTextField.text,
             let x = pickerData[0][selectedPickerData[0]] as? Int,
             let y = pickerData[1][selectedPickerData[1]] as? Int,
@@ -29,6 +31,7 @@ class AddRoverViewController: UIViewController {
     }
     
     @IBAction func cancelButtonTapped(_ sender: Any) {
+        nameTextField.resignFirstResponder()
         dismiss(animated: true)
     }
     
