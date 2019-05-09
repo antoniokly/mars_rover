@@ -52,7 +52,7 @@ class CommandHelper {
             
             rover.bound = site.grid
             
-            try rover.setCommandString(r[3])
+            try rover.setCommandString(r[3], avoids: site.rovers.map({$0.finalPosition.coordinate}))
             
             site.addRover(rover)
         }
@@ -61,5 +61,9 @@ class CommandHelper {
     }
 }
 
-
+extension NSError {
+    var message: String? {
+        return userInfo["message"] as? String
+    }
+}
 

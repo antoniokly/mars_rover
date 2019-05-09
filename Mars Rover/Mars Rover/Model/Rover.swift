@@ -26,7 +26,7 @@ class Rover {
         return actions.commandString
     }
     
-    func setCommandString(_ command: String) throws {
+    func setCommandString(_ command: String, avoids: [Coordinate] = []) throws {
         guard var newActions: [Action] = Array(commandString: command) else {
             return
         }
@@ -36,17 +36,26 @@ class Rover {
             
             var newPosition = initialPosition
             for i in 0 ..< newActions.count {
-                let action = newActions[i]
                 newPosition = newActions[i].transform(newPosition)
                 
-                if newPosition.coordinate.isOutside(upper: limit, lower: .origin) {
-                    NSLog("Out of bound (%@) after step %d (%@). Warning: Command is truncated.", newPosition.string, i, action.command)
+                if avoids.contains(newPosition.coordinate) {
+                    let message = String(format: "%@ is running into avoiding position (%@) after step %d.", name, newPosition.coordinate.string, i)
                     
                     newActions = Array(newActions.prefix(upTo: i))
                     
                     throw NSError(domain: commandErrorDomain,
                                   code: -1,
-                                  userInfo: nil)
+                                  userInfo: ["message": message])
+                }
+                
+                if newPosition.coordinate.isOutside(upper: limit, lower: .origin) {
+                    let message = String(format: "%@ is running out of bound (%@) after step %d.", name, newPosition.coordinate.string, i)
+                    
+                    newActions = Array(newActions.prefix(upTo: i))
+                    
+                    throw NSError(domain: commandErrorDomain,
+                                  code: -1,
+                                  userInfo: ["message": message])
                 }
             }
         }
@@ -54,14 +63,30 @@ class Rover {
         self.actions = newActions
     }
     
-    func addAction(_ action: Action) throws {
+    func addAction(_ action: Action, in site: Site? = nil) throws {
         if action == .moveForward, let limit = bound  {
+            var avoids: [Coordinate] = []
+            
+            if let site = site, let i = site.rovers.index(of: self) {
+                avoids = site.rovers.prefix(upTo: i).map({$0.finalPosition.coordinate})
+            }
+            
             let positionAfter = action.transform(finalPosition)
             
-            if positionAfter.coordinate.isOutside(upper: limit, lower: .origin) {
+            if avoids.contains(positionAfter.coordinate) {
+                let message = String(format: "%@ is running into avoiding position (%@).", name, positionAfter.coordinate.string)
+                
                 throw NSError(domain: commandErrorDomain,
                               code: -1,
-                              userInfo: nil)
+                              userInfo: ["message": message])
+            }
+            
+            if positionAfter.coordinate.isOutside(upper: limit, lower: .origin) {
+                let message = String(format: "%@ is running out of bound.", name)
+                
+                throw NSError(domain: commandErrorDomain,
+                              code: -1,
+                              userInfo: ["message": message])
             }
         }
         

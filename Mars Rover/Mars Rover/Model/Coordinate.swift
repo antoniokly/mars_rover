@@ -22,3 +22,9 @@ struct Coordinate {
         return x > upper.x || y > upper.y || x < lower.x || y < lower.y
     }
 }
+
+extension Coordinate: Equatable {
+    static func == (lhs: Coordinate, rhs: Coordinate) -> Bool {
+        return lhs.x == rhs.x && lhs.y == rhs.y
+    }
+}

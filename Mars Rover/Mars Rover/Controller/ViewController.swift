@@ -80,9 +80,9 @@ class ViewController: UIViewController {
         let angle = CGFloat(rover.finalPosition.heading.angle)
         
         do {
-            try rover.addAction(.moveForward)
-        } catch {
-            let alert = UIAlertController(title: nil, message: "Rover has reached its bound.", preferredStyle: .actionSheet)
+            try rover.addAction(.moveForward, in: site)
+        } catch let error as NSError {
+            let alert = UIAlertController(title: nil, message: error.message ?? "Unknown error.", preferredStyle: .actionSheet)
             
             alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
             
@@ -114,7 +114,7 @@ class ViewController: UIViewController {
             return
         }
         
-        try? rover.addAction(.spinLeft)
+        try? rover.addAction(.spinLeft, in: site)
         
         let animation = roverView.rotateAnimationBlock(angle: CGFloat.pi / 2)
         
@@ -132,7 +132,7 @@ class ViewController: UIViewController {
             return
         }
         
-        try? rover.addAction(.spinRight)
+        try? rover.addAction(.spinRight, in: site)
         
         let animation = roverView.rotateAnimationBlock(angle: -CGFloat.pi / 2)
         

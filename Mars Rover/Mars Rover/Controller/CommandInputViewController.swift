@@ -32,8 +32,8 @@ class CommandInputViewController: UIViewController {
                     self.mainVC.replay()
                 }
             }
-        }catch {
-            let alert = UIAlertController(title: nil, message: "Command error, please retry.", preferredStyle: .actionSheet)
+        } catch let error as NSError {
+            let alert = UIAlertController(title: nil, message: error.message ?? "Command error, please retry.", preferredStyle: .actionSheet)
             
             alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { action in
                 self.inputTextView.becomeFirstResponder()
