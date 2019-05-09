@@ -44,21 +44,15 @@ class ViewController: UIViewController {
     
     var selectedRover: Rover? {
         didSet {
-            if oldValue == selectedRover {
-                return
+            for rover in site.rovers {
+                roverViews[rover]?.stopFlashing()
+            }
+            
+            if let rover = selectedRover {
+                roverViews[rover]?.startFlashing()
             }
             
             updateStatus(for: selectedRover)
-            
-            for rover in site.rovers {
-                if let v = roverViews[rover] {
-                    if rover == selectedRover {
-                        v.startFlashing()
-                    } else {
-                        v.stopFlashing()
-                    }
-                }
-            }
         }
     }
     
@@ -166,13 +160,23 @@ class ViewController: UIViewController {
         updateStatus(for: rover)
     }
     
-    @IBAction func replyButtonTapped(_ sender: Any) {
-        //TODO: disable buttons
-        
+    @IBAction func replayButtonTapped(_ sender: Any) {
         replay()
     }
     
+    func disableControls() {
+        controlsView.alpha = 0
+        controlsView.isUserInteractionEnabled = false
+    }
+    
+    func enableControls() {
+        controlsView.alpha = 1
+        controlsView.isUserInteractionEnabled = true
+    }
+    
     func replay() {
+        disableControls()
+        
         animationQueue = []
         
         for v in roverViews.values {
@@ -183,6 +187,7 @@ class ViewController: UIViewController {
             let view = createViewForRover(rover)
             roverViews[rover] = view
             gridView.addSubview(view)
+            
             
             var position = rover.initialPosition
             
@@ -232,7 +237,8 @@ class ViewController: UIViewController {
     
     func drainAnimationQueue() {
         guard !animationQueue.isEmpty else {
-            //TODO: re-enable buttons
+            enableControls()
+            selectedRover = site.rovers.last
             return
         }
         
