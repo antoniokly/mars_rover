@@ -37,8 +37,6 @@ class ViewController: UIViewController {
             groundViewHeight.constant = max(gridViewSize.height, minGroundSize.height)
             
             selectedRover = site.rovers.first
-            
-            
         }
     }
     
@@ -57,6 +55,8 @@ class ViewController: UIViewController {
     }
     
     var roverViews: [Rover: RoverView] = [:]
+    
+    var pendingReplay: Bool = false
     
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var groundView: UIImageView!
@@ -281,17 +281,34 @@ class ViewController: UIViewController {
         groundView.backgroundColor = UIColor(patternImage: #imageLiteral(resourceName: "Mars"))
         gridView.backgroundColor = UIColor(patternImage: UIImage(imageLiteralResourceName: "grid-84"))
         
-        let siteSize = Int(ceil(max(view.bounds.width, view.bounds.height) / gridSize))
+        if let command = UserDefaults.standard.string(forKey: "command") {
+            do {
+                if let site = try CommandHelper.resolveMultiLineCommand(command) {
+                    self.site = site
+                    pendingReplay = true
+                }
+            } catch {
+                UserDefaults.standard.removeObject(forKey: "command")
+            }
+        }
         
-        site = Site(name: "Mars",
-                    grid: Coordinate(x: siteSize, y: siteSize),
-                    rovers: [])
+        if site == nil {
+            let siteSize = Int(ceil(max(view.bounds.width, view.bounds.height) / gridSize))
+            
+            site = Site(name: "Mars",
+                        grid: Coordinate(x: siteSize, y: siteSize),
+                        rovers: [])
+        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        centreScrollView(for: selectedRover)
+        if pendingReplay {
+            replay()
+        } else {
+            centreScrollView(for: selectedRover)
+        }
     }
 
     override func didReceiveMemoryWarning() {
