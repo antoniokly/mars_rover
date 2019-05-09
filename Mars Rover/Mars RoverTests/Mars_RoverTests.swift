@@ -238,6 +238,19 @@ class Mars_RoverTests: XCTestCase {
         XCTAssertEqual(rover2.finalPosition.string, "0 1 N")
     }
     
+    func testAddActionFollowerCollisionError() {
+        let rover1 = Rover(name: "Rover 1", position: Position(coordinate: Coordinate(x: 0, y: 0), heading: .N))
+        let rover2 = Rover(name: "Rover 2", position: Position(coordinate: Coordinate(x: 0, y: 1), heading: .E))
+        let site = Site(name: "A Plateau", grid: Coordinate(x: 5, y: 5), rovers: [rover1, rover2])
+        
+        do {
+            try rover1.addAction(.moveForward, in: site)
+        } catch let error as NSError {
+            XCTAssertEqual(error.message, "Rover 1 is running into avoiding position (0 1).")
+        }
+        XCTAssertEqual(rover1.finalPosition.string, "0 0 N")
+    }
+    
     func testAddRoverError() {
         let rover1 = Rover(name: "Rover 1", position: Position(coordinate: Coordinate(x: 0, y: 1), heading: .W))
         let rover2 = Rover(name: "Rover 2", position: Position(coordinate: Coordinate(x: 0, y: 1), heading: .N))
@@ -386,7 +399,7 @@ class Mars_RoverTests: XCTestCase {
         }
     }
     
-    func testMultiLineCommandRunningIntoAnother() {
+    func testMultiLineCommandRunningIntoLeader() {
         let command =
         """
         11 11
@@ -403,4 +416,23 @@ class Mars_RoverTests: XCTestCase {
             XCTAssertEqual(error.message, "Rover 2 is running into avoiding position (2 4) after step 9.")
         }
     }
+    
+    func testMultiLineCommandRunningIntoFollower() {
+        let command =
+        """
+        11 11
+        0 0 N
+        MM
+        0 2 N
+        M
+        """
+        
+        do {
+            let _ = try CommandHelper.resolveMultiLineCommand(command)
+            XCTFail("an error is expected")
+        } catch let error as NSError {
+            XCTAssertEqual(error.message, "Rover 1 is running into avoiding position (0 2) after step 1.")
+        }
+    }
+    
 }

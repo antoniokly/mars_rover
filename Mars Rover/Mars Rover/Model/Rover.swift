@@ -68,7 +68,11 @@ class Rover {
             var avoids: [Coordinate] = []
             
             if let site = site, let i = site.rovers.index(of: self) {
-                avoids = site.rovers.prefix(upTo: i).map({$0.finalPosition.coordinate})
+                avoids =
+                    // leaders' final positions
+                    site.rovers.prefix(upTo: i).map({$0.finalPosition.coordinate}) +
+                    // followers' initial positions
+                    site.rovers.suffix(from: i + 1).map({$0.initialPosition.coordinate})
             }
             
             let positionAfter = action.transform(finalPosition)

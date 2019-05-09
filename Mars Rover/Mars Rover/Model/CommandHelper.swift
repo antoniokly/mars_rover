@@ -35,20 +35,37 @@ class CommandHelper {
         
         let roversMatch = regex1.matches(in: command, range: NSRange(command.startIndex..., in: command))
         
+        var rovers: [Rover] = []
+        var commands: [String] = []
+        
         for match in roversMatch {
             let r = String(command[Range(match.range, in: command)!]).components(separatedBy: [" ", "\n"])
             
             if let x = Int(r[0]), let y = Int(r[1]), let h = Heading(rawValue: r[2])  {
                 let position = Position(coordinate: Coordinate(x: x, y: y), heading: h)
                 
-                let rover = Rover(name: "Rover \(site.rovers.count + 1)", position: position)
+                let rover = Rover(name: "Rover \(rovers.count + 1)", position: position)
                 
                 rover.bound = site.grid
                 
-                try rover.setCommandString(r[3], avoids: site.rovers.map({$0.finalPosition.coordinate}))
-                
-                try site.addRover(rover)
+                rovers.append(rover)
+                commands.append(r[3])
             }
+        }
+        
+        for i in 0 ..< rovers.count {
+            let rover = rovers[i]
+            
+            let avoids =
+                // leaders' final positions
+                rovers.prefix(upTo: i).map({$0.finalPosition.coordinate}) +
+                // followers' initial positions
+                rovers.suffix(from: i + 1).map({$0.initialPosition.coordinate})
+                    
+            try rover.setCommandString(commands[i],
+                                       avoids: avoids)
+            
+            try site.addRover(rover)
         }
         
         return site
