@@ -69,8 +69,9 @@ class Rover {
             
             if let site = site, let i = site.rovers.index(of: self) {
                 avoids =
-                    // leaders' final positions
+                    // all final positions
                     site.rovers.prefix(upTo: i).map({$0.finalPosition.coordinate}) +
+                    site.rovers.suffix(from: i + 1).map({$0.finalPosition.coordinate}) +
                     // followers' initial positions
                     site.rovers.suffix(from: i + 1).map({$0.initialPosition.coordinate})
             }
