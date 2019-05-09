@@ -236,6 +236,7 @@ Position:</string>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <connections>
+                        <outlet property="addButton" destination="rGz-BP-K0W" id="pyE-K4-cZv"/>
                         <outlet property="controlsView" destination="yRL-BO-b57" id="oS5-J1-uqG"/>
                         <outlet property="gridView" destination="c1O-ie-gHn" id="sLv-PB-jRb"/>
                         <outlet property="gridViewHeight" destination="miB-mf-8CE" id="mjC-Mf-lvq"/>

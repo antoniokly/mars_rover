@@ -58,6 +58,7 @@ class ViewController: UIViewController {
     
     var restored: Bool = false
     
+    @IBOutlet weak var addButton: RoundButton!
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var groundView: UIImageView!
     @IBOutlet weak var groundViewWidth: NSLayoutConstraint!
@@ -183,11 +184,17 @@ class ViewController: UIViewController {
     }
     
     func disableControls() {
+        addButton.alpha = 0.2
+        addButton.isEnabled = false
+        
         controlsView.alpha = 0.2
         controlsView.isUserInteractionEnabled = false
     }
     
     func enableControls() {
+        addButton.alpha = 1
+        addButton.isEnabled = true
+        
         controlsView.alpha = 1
         controlsView.isUserInteractionEnabled = true
     }
