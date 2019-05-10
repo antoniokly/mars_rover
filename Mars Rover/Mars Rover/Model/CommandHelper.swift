@@ -14,6 +14,7 @@ let commandErrorDomain = "commandErrorDomain"
 
 class CommandHelper {
     
+    @discardableResult
     static func resolveMultiLineCommand(_ command: String) throws -> Site {
         
         //resolve site form the first line

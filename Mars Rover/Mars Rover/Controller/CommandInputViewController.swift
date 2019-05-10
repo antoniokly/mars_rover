@@ -28,11 +28,11 @@ class CommandInputViewController: UIViewController {
             let site = try CommandHelper.resolveMultiLineCommand(command)
             self.mainVC.site = site
             
-            dismiss(animated: true) {
-                self.mainVC.replay()
+            self.dismiss(animated: true) {
+                self.mainVC.replay(shouldShowResults: true)
             }
         } catch let error as NSError {
-            let alert = UIAlertController(title: nil, message: error.message ?? "Command error, please retry.", preferredStyle: .actionSheet)
+            let alert = UIAlertController(title: "Command Error", message: error.message ?? "Command error, please retry.", preferredStyle: .actionSheet)
             
             alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { action in
                 self.inputTextView.becomeFirstResponder()

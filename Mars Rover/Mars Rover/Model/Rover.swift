@@ -53,7 +53,7 @@ class Rover {
             }
             
             if avoids.contains(newPosition.coordinate) {
-                let message = String(format: "%@ is running into avoiding position (%@) after step %d.", name, newPosition.coordinate.string, i)
+                let message = String(format: "%@ is causing a collision at (%@) after step %d.", name, newPosition.coordinate.string, i + 1)
                 
                 newActions = Array(newActions.prefix(upTo: i))
                 
@@ -63,7 +63,7 @@ class Rover {
             }
             
             if newPosition.coordinate.isOutside(upper: upperBound, lower: lowerBound) {
-                let message = String(format: "%@ is running out of bound (%@) after step %d.", name, newPosition.coordinate.string, i)
+                let message = String(format: "%@ is running out of bound (%@) after step %d.", name, newPosition.coordinate.string, i + 1)
                 
                 newActions = Array(newActions.prefix(upTo: i))
                 

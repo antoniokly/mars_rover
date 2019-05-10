@@ -83,7 +83,7 @@ class ViewController: UIViewController {
         do {
             try rover.addAction(.moveForward, in: site)
         } catch let error as NSError {
-            let alert = UIAlertController(title: nil, message: error.message ?? "Unknown error.", preferredStyle: .actionSheet)
+            let alert = UIAlertController(title: "Command Error", message: error.message ?? "Unknown error.", preferredStyle: .actionSheet)
             
             alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
             
@@ -151,7 +151,7 @@ class ViewController: UIViewController {
             return
         }
         
-        let alert = UIAlertController(title: nil, message: "Are you sure to reset all rovers to their initial positions?", preferredStyle: .actionSheet)
+        let alert = UIAlertController(title: "Reset", message: "Are you sure to reset all rovers to their initial positions?", preferredStyle: .actionSheet)
         
         alert.addAction(UIAlertAction(title: "Reset", style: .destructive, handler: { (action) in
             self.reset()
@@ -167,7 +167,20 @@ class ViewController: UIViewController {
     }
     
     @IBAction func replayButtonTapped(_ sender: Any) {
-        replay()
+        do {
+            try CommandHelper.resolveMultiLineCommand(site.commandString)
+            replay()
+        } catch let error as NSError {
+            let alert = UIAlertController(title: "Command Error", message: error.message ?? "Command error, please retry.", preferredStyle: .actionSheet)
+            
+            alert.addAction(UIAlertAction(title: "Edit", style: .default, handler: { action in
+                self.performSegue(withIdentifier: "editCommand", sender: self)
+            }))
+            
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+            
+            present(alert, animated: true)
+        }
     }
     
     func reset() {
@@ -199,7 +212,7 @@ class ViewController: UIViewController {
         controlsView.isUserInteractionEnabled = true
     }
     
-    func replay() {
+    func replay(shouldShowResults: Bool = false) {
         disableControls()
         
         animationQueue = []
@@ -256,13 +269,18 @@ class ViewController: UIViewController {
             })
         }
         
-        drainAnimationQueue()
+        drainAnimationQueue(shouldShowResults: shouldShowResults)
     }
     
-    func drainAnimationQueue() {
+    func drainAnimationQueue(shouldShowResults: Bool) {
         guard !animationQueue.isEmpty else {
             enableControls()
             selectedRover = site.rovers.last
+            
+            if shouldShowResults {
+                showResults()
+            }
+            
             return
         }
         
@@ -272,7 +290,7 @@ class ViewController: UIViewController {
                        delay: 0,
                        options: [.beginFromCurrentState, .curveLinear],
                        animations: animation,
-                       completion: { (finish) in self.drainAnimationQueue() })
+                       completion: { (finish) in self.drainAnimationQueue(shouldShowResults: shouldShowResults) })
     }
     
     
@@ -310,15 +328,10 @@ class ViewController: UIViewController {
         super.viewDidAppear(animated)
         
         if restored {
-            for rover in site.rovers {
-                let roverView = createViewForRover(rover, atFinalposition: true)
-                roverViews[rover] = roverView
-                gridView.addSubview(roverView)
-            }
-            selectedRover = site.rovers.last
+            restoreRoverViews()
+        } else {
+            centreScrollView(for: selectedRover)
         }
-        
-        centreScrollView(for: selectedRover)
     }
 
     override func didReceiveMemoryWarning() {
@@ -353,6 +366,26 @@ class ViewController: UIViewController {
         
         selectedRover = rover
         centreScrollView(for: rover)
+    }
+    
+    func restoreRoverViews() {
+        for rover in site.rovers {
+            let roverView = createViewForRover(rover, atFinalposition: true)
+            roverViews[rover] = roverView
+            gridView.addSubview(roverView)
+        }
+        selectedRover = site.rovers.last
+        centreScrollView(for: selectedRover)
+    }
+    
+    func showResults() {
+        let alert = UIAlertController(title: "Results",
+                                      message: site.rovers.map({$0.finalPosition.string}).joined(separator: "\n"),
+                                      preferredStyle: .alert)
+        
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        
+        present(alert, animated: true)
     }
     
     func centreScrollView(for rover: Rover?, animated: Bool = true) {

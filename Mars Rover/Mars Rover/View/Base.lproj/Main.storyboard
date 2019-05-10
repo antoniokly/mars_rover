@@ -93,7 +93,7 @@ Position:</string>
                                         </userDefinedRuntimeAttributes>
                                         <connections>
                                             <action selector="editButtonTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="mHa-oh-yUB"/>
-                                            <segue destination="1d2-Z3-oEf" kind="presentation" modalPresentationStyle="overFullScreen" modalTransitionStyle="coverVertical" id="gmt-tC-R6O"/>
+                                            <segue destination="1d2-Z3-oEf" kind="presentation" identifier="editCommand" modalPresentationStyle="overFullScreen" modalTransitionStyle="coverVertical" id="gmt-tC-R6O"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="u3A-7E-bty" customClass="RoundButton" customModule="Mars_Rover" customModuleProvider="target">

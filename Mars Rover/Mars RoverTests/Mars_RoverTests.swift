@@ -153,7 +153,7 @@ class Mars_RoverTests: XCTestCase {
             try rover1.setCommandString("RMMMMMMMMLLMMMMM")
             XCTFail("an error is expected")
         } catch let error as NSError {
-            XCTAssertEqual(error.message, ("Rover 1 is running out of bound (6 2) after step 5."))
+            XCTAssertEqual(error.message, ("Rover 1 is running out of bound (6 2) after step 6."))
         }
         
         XCTAssertEqual(rover1.commandString, "")
@@ -169,7 +169,7 @@ class Mars_RoverTests: XCTestCase {
             try rover1.setCommandString("MMMMMMMMLLMMMMMMMMM")
             XCTFail("an error is expected")
         } catch let error as NSError {
-            XCTAssertEqual(error.message, "Rover 1 is running out of bound (1 6) after step 3.")
+            XCTAssertEqual(error.message, "Rover 1 is running out of bound (1 6) after step 4.")
         }
         
         XCTAssertEqual(rover1.commandString, "")
@@ -198,7 +198,7 @@ class Mars_RoverTests: XCTestCase {
             try rover1.setCommandString("LMMMLLMMM")
             XCTFail("an error is expected")
         } catch let error as NSError {
-            XCTAssertEqual(error.message, "Rover 1 is running out of bound (-1 2) after step 2.")
+            XCTAssertEqual(error.message, "Rover 1 is running out of bound (-1 2) after step 3.")
         }
         XCTAssertEqual(rover1.commandString, "")
         XCTAssertEqual(rover1.finalPosition.string, "1 2 N")
@@ -207,7 +207,7 @@ class Mars_RoverTests: XCTestCase {
             try rover2.setCommandString("RMMMMMMRRMMMMM")
             XCTFail("an error is expected")
         } catch let error as NSError {
-            XCTAssertEqual(error.message, "Rover 2 is running out of bound (3 -1) after step 4.")
+            XCTAssertEqual(error.message, "Rover 2 is running out of bound (3 -1) after step 5.")
         }
         XCTAssertEqual(rover2.commandString, "")
         XCTAssertEqual(rover2.finalPosition.string, "3 3 E")
@@ -325,7 +325,7 @@ class Mars_RoverTests: XCTestCase {
         """
         
         do {
-            let _ = try CommandHelper.resolveMultiLineCommand(command)
+            try CommandHelper.resolveMultiLineCommand(command)
             XCTFail("an error is expected")
         } catch let error as NSError {
             XCTAssertEqual(error.message, "No site coordinate is found.")
@@ -343,7 +343,7 @@ class Mars_RoverTests: XCTestCase {
         """
         
         do {
-            let _ = try CommandHelper.resolveMultiLineCommand(command)
+            try CommandHelper.resolveMultiLineCommand(command)
             XCTFail("an error is expected")
         } catch let error as NSError {
             XCTAssertEqual(error.message, "Rover 1's initial position is out of bound.")
@@ -385,7 +385,7 @@ class Mars_RoverTests: XCTestCase {
             let _ = try CommandHelper.resolveMultiLineCommand(command)
             XCTFail("an error is expected")
         } catch let error as NSError {
-            XCTAssertEqual(error.message, "Rover 2 is running out of bound (6 1) after step 10.")
+            XCTAssertEqual(error.message, "Rover 2 is running out of bound (6 1) after step 11.")
         }
     }
     
@@ -421,7 +421,7 @@ class Mars_RoverTests: XCTestCase {
             let _ = try CommandHelper.resolveMultiLineCommand(command)
             XCTFail("an error is expected")
         } catch let error as NSError {
-            XCTAssertEqual(error.message, "Rover 1 is running into avoiding position (0 2) after step 1.")
+            XCTAssertEqual(error.message, "Rover 1 is causing a collision at (0 2) after step 2.")
         }
     }
     
