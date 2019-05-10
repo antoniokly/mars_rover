@@ -11,7 +11,8 @@ class Rover {
     private (set) var initialPosition: Position
     var name: String
     private (set) var actions: [Action] = []
-    var bound: Coordinate?
+    var upperBound: Coordinate?
+    var lowerBound: Coordinate?
     
     init(name: String, position: Position) {
         self.name = name
@@ -31,32 +32,44 @@ class Rover {
             return
         }
         
-        if let limit = bound {
-            NSLog("Validating site boundary: %@", limit.string)
+        if avoids.contains(initialPosition.coordinate)
+            || initialPosition.coordinate.isOutside(upper: upperBound, lower: lowerBound) {
+            let message = String(format: "%@'s initial position is invalid.", name)
             
-            var newPosition = initialPosition
-            for i in 0 ..< newActions.count {
-                newPosition = newActions[i].transform(newPosition)
+            throw NSError(domain: commandErrorDomain,
+                          code: -1,
+                          userInfo: ["message": message])
+        }
+        
+        var newPosition = initialPosition
+        for i in 0 ..< newActions.count {
+            let action = newActions[i]
+            
+            newPosition = action.transform(newPosition)
+            
+            if action != .moveForward {
+                // no need to check if not moving
+                continue
+            }
+            
+            if avoids.contains(newPosition.coordinate) {
+                let message = String(format: "%@ is running into avoiding position (%@) after step %d.", name, newPosition.coordinate.string, i)
                 
-                if avoids.contains(newPosition.coordinate) {
-                    let message = String(format: "%@ is running into avoiding position (%@) after step %d.", name, newPosition.coordinate.string, i)
-                    
-                    newActions = Array(newActions.prefix(upTo: i))
-                    
-                    throw NSError(domain: commandErrorDomain,
-                                  code: -1,
-                                  userInfo: ["message": message])
-                }
+                newActions = Array(newActions.prefix(upTo: i))
                 
-                if newPosition.coordinate.isOutside(upper: limit, lower: .origin) {
-                    let message = String(format: "%@ is running out of bound (%@) after step %d.", name, newPosition.coordinate.string, i)
-                    
-                    newActions = Array(newActions.prefix(upTo: i))
-                    
-                    throw NSError(domain: commandErrorDomain,
-                                  code: -1,
-                                  userInfo: ["message": message])
-                }
+                throw NSError(domain: commandErrorDomain,
+                              code: -1,
+                              userInfo: ["message": message])
+            }
+            
+            if newPosition.coordinate.isOutside(upper: upperBound, lower: lowerBound) {
+                let message = String(format: "%@ is running out of bound (%@) after step %d.", name, newPosition.coordinate.string, i)
+                
+                newActions = Array(newActions.prefix(upTo: i))
+                
+                throw NSError(domain: commandErrorDomain,
+                              code: -1,
+                              userInfo: ["message": message])
             }
         }
         
@@ -64,7 +77,7 @@ class Rover {
     }
     
     func addAction(_ action: Action, in site: Site? = nil) throws {
-        if action == .moveForward, let limit = bound  {
+        if action == .moveForward {
             var avoids: [Coordinate] = []
             
             if let site = site, let i = site.rovers.index(of: self) {
@@ -79,14 +92,14 @@ class Rover {
             let positionAfter = action.transform(finalPosition)
             
             if avoids.contains(positionAfter.coordinate) {
-                let message = String(format: "%@ is running into avoiding position (%@).", name, positionAfter.coordinate.string)
+                let message = String(format: "%@ is running into another rover.", name)
                 
                 throw NSError(domain: commandErrorDomain,
                               code: -1,
                               userInfo: ["message": message])
             }
             
-            if positionAfter.coordinate.isOutside(upper: limit, lower: .origin) {
+            if positionAfter.coordinate.isOutside(upper: upperBound, lower: lowerBound) {
                 let message = String(format: "%@ is running out of bound.", name)
                 
                 throw NSError(domain: commandErrorDomain,

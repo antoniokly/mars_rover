@@ -64,11 +64,6 @@ class AddRoverViewController: UIViewController {
         positionPicker.dataSource = self
         positionPicker.delegate = self
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
 }
 
 extension AddRoverViewController: UITextFieldDelegate {
@@ -96,6 +91,4 @@ extension AddRoverViewController: UIPickerViewDelegate {
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         selectedPickerData[component] = row
     }
-    
-    
 }

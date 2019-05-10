@@ -18,8 +18,20 @@ struct Coordinate {
         return String(format: "\(Coordinate.format) \(Coordinate.format)", x, y)
     }
     
-    func isOutside(upper: Coordinate, lower: Coordinate) -> Bool {
-        return x > upper.x || y > upper.y || x < lower.x || y < lower.y
+    func isOutside(upper: Coordinate?, lower: Coordinate?) -> Bool {
+        if let upper = upper {
+            if x > upper.x || y > upper.y {
+                return true
+            }
+        }
+        
+        if let lower = lower {
+            if x < lower.x || y < lower.y {
+                return true
+            }
+        }
+        
+        return false
     }
 }
 

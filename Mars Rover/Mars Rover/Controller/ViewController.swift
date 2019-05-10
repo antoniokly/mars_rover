@@ -290,10 +290,8 @@ class ViewController: UIViewController {
         
         if let command = UserDefaults.standard.string(forKey: "command") {
             do {
-                if let site = try CommandHelper.resolveMultiLineCommand(command) {
-                    self.site = site
-                    restored = true
-                }
+                self.site = try CommandHelper.resolveMultiLineCommand(command)
+                restored = true
             } catch {
                 UserDefaults.standard.removeObject(forKey: "command")
             }

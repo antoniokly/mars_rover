@@ -10,6 +10,7 @@ import Foundation
 class Site {
     var name: String
     var grid: Coordinate
+    var origin: Coordinate = .origin
     private (set) var rovers: [Rover]
     
     var commandString: String {
@@ -27,22 +28,34 @@ class Site {
         self.rovers = rovers
         
         for rover in self.rovers {
-            rover.bound = grid
+            rover.upperBound = grid
+            rover.lowerBound = origin
         }
     }
     
     func addRover(_ rover: Rover) throws {
-        let avoids = rovers.map({$0.initialPosition.coordinate})
-        
-        if avoids.contains(rover.initialPosition.coordinate) {
-            let message = String(format: "There is already a rover at %@", rover.initialPosition.coordinate.string)
+        if rover.initialPosition.coordinate.isOutside(upper: grid, lower: origin) {
+            let message = String(format: "%@'s initial position is out of bound.",
+                                 rover.name)
             
             throw NSError(domain: commandErrorDomain,
                           code: -1,
                           userInfo: ["message" : message])
         }
         
+        let avoids = rovers.map({$0.initialPosition.coordinate})
+        
+        if avoids.contains(rover.initialPosition.coordinate) {
+            let message = String(format: "%@'s initial position is already occupied.",
+                                 rover.name)
+            
+            throw NSError(domain: commandErrorDomain,
+                          code: -1,
+                          userInfo: ["message" : message])
+        }
+        
+        rover.upperBound = grid
+        rover.lowerBound = origin
         rovers.append(rover)
-        rover.bound = grid
     }
 }

@@ -83,7 +83,7 @@ class Mars_RoverTests: XCTestCase {
         XCTAssertEqual(rover.finalPosition.string, "1 1 E")
     }
     
-    func testCommandString() {
+    func testGetCommandString() {
         let rover = Rover(name: "Rover 1",
                           position: Position(coordinate: Coordinate(x: 1, y: 1), heading: .E))
         
@@ -102,7 +102,11 @@ class Mars_RoverTests: XCTestCase {
         ]
         
         for action in actions {
-            try? rover.addAction(action)
+            do {
+                try rover.addAction(action)
+            } catch let error {
+                XCTFail(error.localizedDescription)
+            }
         }
         
         XCTAssertEqual(rover.commandString, "MLRMRLLLLMM")
@@ -140,26 +144,30 @@ class Mars_RoverTests: XCTestCase {
         XCTAssertEqual(rover1.commandString, "")
     }
     
-    func testOutOfBoundX() {
+    func testCommandStringOutOfBoundX() {
         let rover1 = Rover(name: "Rover 1", position: Position(coordinate: Coordinate(x: 1, y: 2), heading: .N))
-        rover1.bound = Coordinate(x: 5, y: 5)
+        rover1.upperBound = Coordinate(x: 5, y: 5)
+        rover1.lowerBound = .origin
         
         do {
             try rover1.setCommandString("RMMMMMMMMLLMMMMM")
-        } catch {
-            XCTAssertTrue(error.localizedDescription.contains(commandErrorDomain))
+            XCTFail("an error is expected")
+        } catch let error as NSError {
+            XCTAssertEqual(error.message, ("Rover 1 is running out of bound (6 2) after step 5."))
         }
         
         XCTAssertEqual(rover1.commandString, "")
         XCTAssertEqual(rover1.finalPosition.string, "1 2 N")
     }
     
-    func testOutOfBoundY() {
+    func testCommandStringOutOfBoundY() {
         let rover1 = Rover(name: "Rover 1", position: Position(coordinate: Coordinate(x: 1, y: 2), heading: .N))
-        rover1.bound = Coordinate(x: 5, y: 5)
+        rover1.upperBound = Coordinate(x: 5, y: 5)
+        rover1.lowerBound = .origin
         
         do {
             try rover1.setCommandString("MMMMMMMMLLMMMMMMMMM")
+            XCTFail("an error is expected")
         } catch let error as NSError {
             XCTAssertEqual(error.message, "Rover 1 is running out of bound (1 6) after step 3.")
         }
@@ -168,7 +176,7 @@ class Mars_RoverTests: XCTestCase {
         XCTAssertEqual(rover1.finalPosition.string, "1 2 N")
     }
     
-    func testNoBound() {
+    func testCommandStringNoBound() {
         let rover1 = Rover(name: "Rover 1", position: Position(coordinate: Coordinate(x: 1, y: 2), heading: .N))
         
         do {
@@ -181,13 +189,14 @@ class Mars_RoverTests: XCTestCase {
         XCTAssertEqual(rover1.finalPosition.string, "-2 -1 W")
     }
     
-    func testOutOfBoundNegative() {
+    func testCommandStringOutOfBoundNegative() {
         let rover1 = Rover(name: "Rover 1", position: Position(coordinate: Coordinate(x: 1, y: 2), heading: .N))
         let rover2 = Rover(name: "Rover 2", position: Position(coordinate: Coordinate(x: 3, y: 3), heading: .E))
         let _ = Site(name: "A Plateau", grid: Coordinate(x: 5, y: 5), rovers: [rover1, rover2])
         
         do {
             try rover1.setCommandString("LMMMLLMMM")
+            XCTFail("an error is expected")
         } catch let error as NSError {
             XCTAssertEqual(error.message, "Rover 1 is running out of bound (-1 2) after step 2.")
         }
@@ -196,6 +205,7 @@ class Mars_RoverTests: XCTestCase {
         
         do {
             try rover2.setCommandString("RMMMMMMRRMMMMM")
+            XCTFail("an error is expected")
         } catch let error as NSError {
             XCTAssertEqual(error.message, "Rover 2 is running out of bound (3 -1) after step 4.")
         }
@@ -219,6 +229,7 @@ class Mars_RoverTests: XCTestCase {
 
         do {
             try rover1.addAction(.moveForward)
+            XCTFail("an error is expected")
         } catch let error as NSError {
             XCTAssertEqual(error.message, "Rover 1 is running out of bound.")
         }
@@ -232,8 +243,9 @@ class Mars_RoverTests: XCTestCase {
         
         do {
             try rover2.addAction(.moveForward, in: site)
+            XCTFail("an error is expected")
         } catch let error as NSError {
-            XCTAssertEqual(error.message, "Rover 2 is running into avoiding position (0 2).")
+            XCTAssertEqual(error.message, "Rover 2 is running into another rover.")
         }
         XCTAssertEqual(rover2.finalPosition.string, "0 1 N")
     }
@@ -245,8 +257,9 @@ class Mars_RoverTests: XCTestCase {
         
         do {
             try rover1.addAction(.moveForward, in: site)
+            XCTFail("an error is expected")
         } catch let error as NSError {
-            XCTAssertEqual(error.message, "Rover 1 is running into avoiding position (0 1).")
+            XCTAssertEqual(error.message, "Rover 1 is running into another rover.")
         }
         XCTAssertEqual(rover1.finalPosition.string, "0 0 N")
     }
@@ -259,49 +272,11 @@ class Mars_RoverTests: XCTestCase {
         XCTAssertEqual(site.rovers.count, 1)
         do {
             try site.addRover(rover2)
+            XCTFail("an error is expected")
         } catch let error as NSError {
-            XCTAssertEqual(error.message, "There is already a rover at 0 1")
+            XCTAssertEqual(error.message, "Rover 2's initial position is already occupied.")
         }
         XCTAssertEqual(site.rovers.count, 1)
-    }
-    
-    func testExample() {
-        let rover1 = Rover(name: "Rover 1", position: Position(coordinate: Coordinate(x: 1, y: 2), heading: .N))
-        let rover2 = Rover(name: "Rover 2", position: Position(coordinate: Coordinate(x: 3, y: 3), heading: .E))
-        let site = Site(name: "A Plateau", grid: Coordinate(x: 5, y: 5), rovers: [rover1, rover2])
-        
-        try? rover1.setCommandString("LMLMLMLMM")
-        try? rover2.setCommandString("MMRMMRMRRM")
-    
-        //assert input
-        XCTAssertEqual(site.grid.string, "5 5")
-        XCTAssertEqual(rover1.initialPosition.string, "1 2 N")
-        XCTAssertEqual(rover1.actions, [.spinLeft,
-                                        .moveForward,
-                                        .spinLeft,
-                                        .moveForward,
-                                        .spinLeft,
-                                        .moveForward,
-                                        .spinLeft,
-                                        .moveForward,
-                                        .moveForward]
-        )
-        XCTAssertEqual(rover2.initialPosition.string, "3 3 E")
-        XCTAssertEqual(rover2.actions, [.moveForward,
-                                        .moveForward,
-                                        .spinRight,
-                                        .moveForward,
-                                        .moveForward,
-                                        .spinRight,
-                                        .moveForward,
-                                        .spinRight,
-                                        .spinRight,
-                                        .moveForward]
-        )
-        
-        //assert output
-        XCTAssertEqual(rover1.finalPosition.string, "1 3 N")
-        XCTAssertEqual(rover2.finalPosition.string, "5 1 E")
     }
     
     func testResolveMultiLineCommand() {
@@ -315,10 +290,7 @@ class Mars_RoverTests: XCTestCase {
         """
         
         do {
-            guard let site = try CommandHelper.resolveMultiLineCommand(command) else {
-                XCTFail("No site")
-                return
-            }
+            let site = try CommandHelper.resolveMultiLineCommand(command)
             
             XCTAssertEqual(site.grid.x, 15)
             XCTAssertEqual(site.grid.y, 50)
@@ -353,10 +325,28 @@ class Mars_RoverTests: XCTestCase {
         """
         
         do {
-            let site = try CommandHelper.resolveMultiLineCommand(command)
-            XCTAssertNil(site, "no site should be created")
-        } catch {
-            XCTFail(error.localizedDescription)
+            let _ = try CommandHelper.resolveMultiLineCommand(command)
+            XCTFail("an error is expected")
+        } catch let error as NSError {
+            XCTAssertEqual(error.message, "No site coordinate is found.")
+        }
+    }
+    
+    func testMultiLineCommandRoverPlacedOutOfBound() {
+        let command =
+        """
+        5 5
+        1 6 N
+        LL
+        3 3 E
+        RR
+        """
+        
+        do {
+            let _ = try CommandHelper.resolveMultiLineCommand(command)
+            XCTFail("an error is expected")
+        } catch let error as NSError {
+            XCTAssertEqual(error.message, "Rover 1's initial position is out of bound.")
         }
     }
     
@@ -372,10 +362,10 @@ class Mars_RoverTests: XCTestCase {
         
         do {
             let site = try CommandHelper.resolveMultiLineCommand(command)
-            XCTAssertEqual(site?.grid.x, 5)
-            XCTAssertEqual(site?.grid.x, 5)
+            XCTAssertEqual(site.grid.x, 5)
+            XCTAssertEqual(site.grid.x, 5)
             
-            XCTAssertEqual(site?.rovers.count, 0)
+            XCTAssertEqual(site.rovers.count, 0)
         } catch {
             XCTFail(error.localizedDescription)
         }
@@ -413,7 +403,7 @@ class Mars_RoverTests: XCTestCase {
             let _ = try CommandHelper.resolveMultiLineCommand(command)
             XCTFail("an error is expected")
         } catch let error as NSError {
-            XCTAssertEqual(error.message, "Rover 2 is running into avoiding position (2 4) after step 9.")
+            XCTAssertEqual(error.message, "Rover 2's initial position is already occupied.")
         }
     }
     
@@ -435,4 +425,61 @@ class Mars_RoverTests: XCTestCase {
         }
     }
     
+    func testExampleModel() {
+        let rover1 = Rover(name: "Rover 1", position: Position(coordinate: Coordinate(x: 1, y: 2), heading: .N))
+        let rover2 = Rover(name: "Rover 2", position: Position(coordinate: Coordinate(x: 3, y: 3), heading: .E))
+        let site = Site(name: "A Plateau", grid: Coordinate(x: 5, y: 5), rovers: [rover1, rover2])
+        
+        try? rover1.setCommandString("LMLMLMLMM")
+        try? rover2.setCommandString("MMRMMRMRRM")
+        
+        //assert input
+        XCTAssertEqual(site.grid.string, "5 5")
+        XCTAssertEqual(rover1.initialPosition.string, "1 2 N")
+        XCTAssertEqual(rover1.actions, [.spinLeft,
+                                        .moveForward,
+                                        .spinLeft,
+                                        .moveForward,
+                                        .spinLeft,
+                                        .moveForward,
+                                        .spinLeft,
+                                        .moveForward,
+                                        .moveForward]
+        )
+        XCTAssertEqual(rover2.initialPosition.string, "3 3 E")
+        XCTAssertEqual(rover2.actions, [.moveForward,
+                                        .moveForward,
+                                        .spinRight,
+                                        .moveForward,
+                                        .moveForward,
+                                        .spinRight,
+                                        .moveForward,
+                                        .spinRight,
+                                        .spinRight,
+                                        .moveForward]
+        )
+        
+        //assert output
+        XCTAssertEqual(rover1.finalPosition.string, "1 3 N")
+        XCTAssertEqual(rover2.finalPosition.string, "5 1 E")
+    }
+    
+    func testMultiLineCommandExample() {
+        let command =
+        """
+        5 5
+        1 2 N
+        LMLMLMLMM
+        3 3 E
+        MMRMMRMRRM
+        """
+        
+        do {
+            let site = try CommandHelper.resolveMultiLineCommand(command)
+            XCTAssertEqual(site.rovers.first?.finalPosition.string, "1 3 N")
+            XCTAssertEqual(site.rovers.last?.finalPosition.string, "5 1 E")
+        } catch {
+            XCTFail(error.localizedDescription)
+        }
+    }
 }

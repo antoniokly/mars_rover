@@ -14,14 +14,15 @@ let commandErrorDomain = "commandErrorDomain"
 
 class CommandHelper {
     
-    static func resolveMultiLineCommand(_ command: String) throws -> Site? {
+    static func resolveMultiLineCommand(_ command: String) throws -> Site {
         
-        //site
+        //resolve site form the first line
         let regex = try NSRegularExpression(pattern: gridPattern)
         guard let match = regex.firstMatch(in: command, range: NSRange(command.startIndex..., in: command)) else {
-            return nil
+            throw NSError(domain: commandErrorDomain,
+                          code: -1,
+                          userInfo: ["message": "No site coordinate is found."])
         }
-        
         
         let grid = String(command[Range(match.range, in: command)!])
             .components(separatedBy: [" ", "\n"])
@@ -30,7 +31,7 @@ class CommandHelper {
         let site = Site(name: "Site", grid: Coordinate(x: grid[0], y: grid[1]), rovers: [])
         
         
-        //Rovers
+        //resolve rovers
         let regex1 = try NSRegularExpression(pattern: roverPattern)
         
         let roversMatch = regex1.matches(in: command, range: NSRange(command.startIndex..., in: command))
@@ -46,13 +47,21 @@ class CommandHelper {
                 
                 let rover = Rover(name: "Rover \(rovers.count + 1)", position: position)
                 
-                rover.bound = site.grid
+                rover.upperBound = site.grid
+                rover.lowerBound = site.origin
                 
                 rovers.append(rover)
                 commands.append(r[3])
             }
         }
         
+        //place all rovers first
+        for rover in rovers {
+            // throws error if rover is placed out of bounds or a occupied position
+            try site.addRover(rover)
+        }
+        
+        //test for collisions
         for i in 0 ..< rovers.count {
             let rover = rovers[i]
             
@@ -61,11 +70,9 @@ class CommandHelper {
                 rovers.prefix(upTo: i).map({$0.finalPosition.coordinate}) +
                 // followers' initial positions
                 rovers.suffix(from: i + 1).map({$0.initialPosition.coordinate})
-                    
-            try rover.setCommandString(commands[i],
-                                       avoids: avoids)
             
-            try site.addRover(rover)
+            // throws error if rover run out of bounds or causing collisions
+            try rover.setCommandString(commands[i], avoids: avoids)
         }
         
         return site
